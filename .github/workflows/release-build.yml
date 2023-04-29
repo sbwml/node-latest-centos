@@ -50,14 +50,15 @@ jobs:
       run: |
         source /opt/rh/devtoolset-10/enable
         cd node-v${{ env.VERSION }}
-        ./configure --prefix=../node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
-        make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)/
+        ./configure --prefix=../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
+        make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/
+        strip ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/bin/node
 
     - name: Create archive
       run: |
         mkdir tar
-        tar Jcvf tar/node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT).tar.xz node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
-        tar zcvf tar/node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT).tar.gz node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
+        tar Jcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.xz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
+        tar zcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.gz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
         cd tar && sha256sum node-v* > sha256sum.txt
 
     - name: Create release
