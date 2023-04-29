@@ -1,0 +1,72 @@
+name: Build releases
+
+on:
+  watch:
+    types: started
+
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    name: Build ${{ matrix.tag }} Version
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: ["centos:7"]
+        tag:
+          - lts
+          - current
+
+    container:
+      image: ${{ matrix.container }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+
+    - name: Setting up the environment
+      run: |
+        yum makecache
+        yum install -y centos-release-scl-rh centos-release-scl
+        yum install -y devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-make wget make python3
+
+    - name: Set node version
+      run: |
+        source ./node_version
+        if [[ ${{ matrix.tag }} == "lts" ]]; then
+            echo "DIST=$LTS_DIST" >> "$GITHUB_ENV"
+            echo "VERSION=$LTS_VERSION" >> "$GITHUB_ENV"
+        else
+            echo "DIST=$CURRENT_DIST" >> "$GITHUB_ENV"
+            echo "VERSION=$CURRENT_VERSION" >> "$GITHUB_ENV"
+        fi
+
+    - name: Download node source code
+      run: |
+        wget https://nodejs.org/dist/latest-v${{ env.DIST }}/node-v${{ env.VERSION }}.tar.xz
+        tar -Jxf node-v${{ env.VERSION }}.tar.xz
+
+    - name: Build node
+      run: |
+        source /opt/rh/devtoolset-10/enable
+        cd node-v${{ env.VERSION }}
+        ./configure --prefix=../node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
+        make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)/
+
+    - name: Create archive
+      run: |
+        mkdir tar
+        tar Jcvf tar/node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT).tar.xz node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
+        tar zcvf tar/node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT).tar.gz node-v${{ env.VERSION }}-linux-$(getconf LONG_BIT)
+        cd tar && sha256sum node-v* > sha256sum.txt
+
+    - name: Create release
+      uses: ncipollo/release-action@v1
+      with:
+        name: node-v${{ env.VERSION }}
+        allowUpdates: true
+        tag: v${{ env.VERSION }}
+        commit: master
+        replacesArtifacts: true
+        token: ${{ secrets.workflow_token }}
+        artifacts: tar/*
