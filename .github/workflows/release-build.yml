@@ -1,24 +1,21 @@
 name: Build releases
 
 on:
-  watch:
-    types: started
+  schedule:
+    - cron: 0 23 * * *
 
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
     name: Build ${{ matrix.tag }} Version
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        container: ["centos:7"]
         tag:
           - lts
           - current
-
     container:
-      image: ${{ matrix.container }}
+      image: centos:7
 
     steps:
     - name: Checkout
@@ -28,25 +25,35 @@ jobs:
       run: |
         yum makecache
         yum install -y centos-release-scl-rh centos-release-scl
-        yum install -y devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-make wget make python3
+        yum install -y devtoolset-10-gcc devtoolset-10-gcc-c++ devtoolset-10-make wget make python3 curl
 
-    - name: Set node version
+    - name: Check Node Version
       run: |
-        source ./node_version
+        # the original commit does not seem to be readable inside the container, so use github api.
+        TAGS=$(curl -sk https://api.github.com/repos/sbwml/node-latest-centos/tags | grep "name")
         if [[ ${{ matrix.tag }} == "lts" ]]; then
-            echo "DIST=$LTS_DIST" >> "$GITHUB_ENV"
-            echo "VERSION=$LTS_VERSION" >> "$GITHUB_ENV"
+            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="Download \(.*\) LTS".*/\1/p')
+            echo "PRE_RELEASE=false" >> "$GITHUB_ENV"
         else
-            echo "DIST=$CURRENT_DIST" >> "$GITHUB_ENV"
-            echo "VERSION=$CURRENT_VERSION" >> "$GITHUB_ENV"
+            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="Download \(.*\) Current".*/\1/p')
+            echo "PRE_RELEASE=true" >> "$GITHUB_ENV"
+        fi
+        if [[ "$TAGS" == *"$LATEST_VERSION"* ]]; then
+            echo -e " \n\e[1;32mnode-v$LATEST_VERSION is already the latest version.\e[0m\n"
+            exit 0
+        else
+            echo "VERSION=$LATEST_VERSION" >> "$GITHUB_ENV"
+            echo "next=true" >> "$GITHUB_ENV"
         fi
 
-    - name: Download node source code
+    - name: Download Node source code
+      if: env.next == 'true'
       run: |
-        wget https://nodejs.org/dist/latest-v${{ env.DIST }}/node-v${{ env.VERSION }}.tar.xz
+        wget https://nodejs.org/dist/v${{ env.VERSION }}/node-v${{ env.VERSION }}.tar.xz
         tar -Jxf node-v${{ env.VERSION }}.tar.xz
 
-    - name: Build node
+    - name: Build Node
+      if: env.next == 'true'
       run: |
         source /opt/rh/devtoolset-10/enable
         cd node-v${{ env.VERSION }}
@@ -54,14 +61,23 @@ jobs:
         make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/
         strip ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/bin/node
 
-    - name: Create archive
+    - name: Create Archive
+      if: env.next == 'true'
       run: |
         mkdir tar
         tar Jcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.xz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
         tar zcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.gz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
         cd tar && sha256sum node-v* > sha256sum.txt
 
+    - name: Upload Artifacts
+      if: env.next == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-v${{ env.VERSION }}
+        path: tar/*
+
     - name: Create release
+      if: env.next == 'true'
       uses: ncipollo/release-action@v1
       with:
         name: node-v${{ env.VERSION }}
@@ -69,5 +85,6 @@ jobs:
         tag: v${{ env.VERSION }}
         commit: master
         replacesArtifacts: true
+        prerelease: ${{ env.PRE_RELEASE }}
         token: ${{ secrets.workflow_token }}
         artifacts: tar/*
