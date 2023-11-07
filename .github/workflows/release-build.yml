@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setting up the environment
       run: |
@@ -71,14 +71,14 @@ jobs:
 
     - name: Upload Artifacts
       if: env.next == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.3
       with:
         name: node-v${{ env.VERSION }}
         path: tar/*
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1.13.0
       with:
         name: node-v${{ env.VERSION }}
         allowUpdates: true
