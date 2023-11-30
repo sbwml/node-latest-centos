@@ -32,10 +32,10 @@ jobs:
         # the original commit does not seem to be readable inside the container, so use github api.
         TAGS=$(curl -sk https://api.github.com/repos/sbwml/node-latest-centos/tags | grep "name")
         if [[ ${{ matrix.tag }} == "lts" ]]; then
-            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="Download \(.*\) LTS".*/\1/p')
+            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="\([^"]*\) LTS".*/\1/p')
             echo "PRE_RELEASE=false" >> "$GITHUB_ENV"
         else
-            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="Download \(.*\) Current".*/\1/p')
+            LATEST_VERSION=$(curl -sk https://nodejs.org/en | sed -n 's/.*title="\([^"]*\) Current".*/\1/p')
             echo "PRE_RELEASE=true" >> "$GITHUB_ENV"
         fi
         if [[ "$TAGS" == *"$LATEST_VERSION"* ]]; then
