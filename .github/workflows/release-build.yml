@@ -78,7 +78,7 @@ jobs:
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1.13.0
       with:
         name: node-v${{ env.VERSION }}
         allowUpdates: true
