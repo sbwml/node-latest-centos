@@ -1,11 +1,10 @@
-name: Build releases
+name: Build Test
 
-on:
-  schedule:
-    - cron: 0 23 * * *
+on: workflow_dispatch
 
 jobs:
   build:
+    if: github.event.repository.owner.id == github.event.sender.id
     name: Build ${{ matrix.tag }} Version
     runs-on: ubuntu-latest
     strategy:
