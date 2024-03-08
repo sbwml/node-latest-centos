@@ -57,6 +57,11 @@ jobs:
       run: |
         source /opt/rh/devtoolset-11/enable
         cd node-v${{ env.VERSION }}
+        if [[ ${{ matrix.tag }} == "current" ]]; then
+            patch -p1 < ../patches/0001-Revert-deps-update-c-ares-to-1.27.0.patch
+            patch -p1 < ../patches/0002-Revert-deps-update-c-ares-to-1.26.0.patch
+            patch -p1 < ../patches/0003-Revert-deps-update-c-ares-to-1.25.0.patch
+        fi
         ./configure --prefix=../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
         make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/
         strip ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/bin/node

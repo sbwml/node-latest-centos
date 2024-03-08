@@ -1,0 +1,3301 @@
+From 80184db1e46383b073e8e7efd6be192989f90f33 Mon Sep 17 00:00:00 2001
+From: sbwml <admin@cooluc.com>
+Date: Sat, 9 Mar 2024 04:00:27 +0800
+Subject: [PATCH 1/3] Revert "deps: update c-ares to 1.27.0"
+
+This reverts commit c7083720cc8054fd556e05ed2b58c599c5197aa9.
+---
+ deps/cares/CHANGES                          | 299 +++++++-------------
+ deps/cares/CMakeLists.txt                   |  20 +-
+ deps/cares/README.md                        |   8 +-
+ deps/cares/RELEASE-NOTES.md                 |  48 ++--
+ deps/cares/aminclude_static.am              |   2 +-
+ deps/cares/configure                        |  25 +-
+ deps/cares/configure.ac                     |   6 +-
+ deps/cares/docs/Makefile.inc                |   3 -
+ deps/cares/docs/adig.1                      |  30 ++
+ deps/cares/docs/ahost.1                     |  32 ++-
+ deps/cares/docs/ares_cancel.3               |  13 +
+ deps/cares/docs/ares_create_query.3         |  13 +
+ deps/cares/docs/ares_destroy.3              |  13 +
+ deps/cares/docs/ares_destroy_options.3      |  13 +
+ deps/cares/docs/ares_dup.3                  |  13 +
+ deps/cares/docs/ares_expand_name.3          |  13 +
+ deps/cares/docs/ares_expand_string.3        |  13 +
+ deps/cares/docs/ares_free_data.3            |  13 +
+ deps/cares/docs/ares_free_hostent.3         |  13 +
+ deps/cares/docs/ares_free_string.3          |  13 +
+ deps/cares/docs/ares_freeaddrinfo.3         |  13 +
+ deps/cares/docs/ares_get_servers.3          |  13 +
+ deps/cares/docs/ares_gethostbyname_file.3   |  13 +
+ deps/cares/docs/ares_inet_ntop.3            |  13 +
+ deps/cares/docs/ares_inet_pton.3            |  13 +
+ deps/cares/docs/ares_init_options.3         |  11 +-
+ deps/cares/docs/ares_library_cleanup.3      |  13 +
+ deps/cares/docs/ares_library_init.3         |  13 +
+ deps/cares/docs/ares_library_init_android.3 |  13 +
+ deps/cares/docs/ares_library_initialized.3  |  13 +
+ deps/cares/docs/ares_mkquery.3              |  13 +
+ deps/cares/docs/ares_parse_a_reply.3        |  13 +
+ deps/cares/docs/ares_parse_aaaa_reply.3     |  13 +
+ deps/cares/docs/ares_parse_caa_reply.3      |  13 +
+ deps/cares/docs/ares_parse_mx_reply.3       |  13 +
+ deps/cares/docs/ares_parse_naptr_reply.3    |  13 +
+ deps/cares/docs/ares_parse_ns_reply.3       |  13 +
+ deps/cares/docs/ares_parse_ptr_reply.3      |  13 +
+ deps/cares/docs/ares_parse_soa_reply.3      |  13 +
+ deps/cares/docs/ares_parse_srv_reply.3      |  13 +
+ deps/cares/docs/ares_parse_txt_reply.3      |  13 +
+ deps/cares/docs/ares_parse_uri_reply.3      |  13 +
+ deps/cares/docs/ares_process.3              |  13 +
+ deps/cares/docs/ares_query.3                |  17 +-
+ deps/cares/docs/ares_save_options.3         |  13 +
+ deps/cares/docs/ares_search.3               |  16 +-
+ deps/cares/docs/ares_send.3                 |   4 -
+ deps/cares/docs/ares_set_local_dev.3        |  13 +
+ deps/cares/docs/ares_set_local_ip4.3        |  13 +
+ deps/cares/docs/ares_set_local_ip6.3        |  13 +
+ deps/cares/docs/ares_set_servers.3          |  13 +
+ deps/cares/docs/ares_set_servers_csv.3      |  13 +
+ deps/cares/docs/ares_set_sortlist.3         |  12 +
+ deps/cares/docs/ares_strerror.3             |  13 +
+ deps/cares/docs/ares_threadsafety.3         |   2 +-
+ deps/cares/docs/ares_timeout.3              |  13 +
+ deps/cares/docs/ares_version.3              |  13 +
+ deps/cares/include/ares.h                   |  76 ++---
+ deps/cares/include/ares_dns_record.h        |  18 +-
+ deps/cares/include/ares_version.h           |   4 +-
+ deps/cares/libcares.pc.in                   |   2 +-
+ deps/cares/src/lib/ares__buf.c              |   2 +-
+ deps/cares/src/lib/ares__htable.c           |  10 +-
+ deps/cares/src/lib/ares__htable.h           |   3 +-
+ deps/cares/src/lib/ares__htable_asvp.c      |   9 +-
+ deps/cares/src/lib/ares__htable_asvp.h      |  23 +-
+ deps/cares/src/lib/ares__read_line.c        |   8 -
+ deps/cares/src/lib/ares__socket.c           |   9 +-
+ deps/cares/src/lib/ares__threads.c          | 292 +------------------
+ deps/cares/src/lib/ares__threads.h          |  15 -
+ deps/cares/src/lib/ares_cancel.c            |   3 -
+ deps/cares/src/lib/ares_destroy.c           |   2 -
+ deps/cares/src/lib/ares_dns_parse.c         |  12 +-
+ deps/cares/src/lib/ares_event_epoll.c       |  30 +-
+ deps/cares/src/lib/ares_event_poll.c        |   5 +-
+ deps/cares/src/lib/ares_event_select.c      |   3 +-
+ deps/cares/src/lib/ares_event_thread.c      |  27 +-
+ deps/cares/src/lib/ares_event_wake_pipe.c   |   8 +-
+ deps/cares/src/lib/ares_getnameinfo.c       |   8 +-
+ deps/cares/src/lib/ares_init.c              |  16 +-
+ deps/cares/src/lib/ares_options.c           |   6 +-
+ deps/cares/src/lib/ares_private.h           |  21 +-
+ deps/cares/src/lib/ares_process.c           |  28 +-
+ deps/cares/src/lib/ares_send.c              |  21 +-
+ deps/cares/src/lib/ares_strerror.c          |   2 -
+ deps/cares/src/lib/ares_sysconfig.c         |   1 -
+ deps/cares/src/tools/adig.c                 |   4 +-
+ 87 files changed, 925 insertions(+), 811 deletions(-)
+
+diff --git a/deps/cares/CHANGES b/deps/cares/CHANGES
+index 24a68a8984..a6481e71ac 100644
+--- a/deps/cares/CHANGES
++++ b/deps/cares/CHANGES
+@@ -1,194 +1,5 @@
+    Changelog for the c-ares project. Generated with git2changes.pl
+ 
+-Version 1.27.0 (22 Feb 2024)
+-
+-GitHub (22 Feb 2024)
+-- [Brad House brought this change]
+-
+-  Release 1.27.0 (#715)
+-  
+-  release prep for 1.27.0 release
+-
+-- [Brad House brought this change]
+-
+-  Merge pull request from GHSA-mg26-v6qh-x48q
+-
+-- [Oliver Welsh brought this change]
+-
+-  Add flag to not use a default local named server on channel initialization (#713)
+-  
+-  Hello, I work on an application for Microsoft which uses c-ares to
+-  perform DNS lookups. We have made some minor changes to the library over
+-  time, and would like to contribute these back to the project in case
+-  they are useful more widely. This PR adds a new channel init flag,
+-  described below.
+-  
+-  Please let me know if I can include any more information to make this PR
+-  better/easier for you to review. Thanks!
+-  
+-  **Summary**
+-  When initializing a channel with `ares_init_options()`, if there are no
+-  nameservers available (because `ARES_OPT_SERVERS` is not used and
+-  `/etc/resolv.conf` is either empty or not available) then a default
+-  local named server will be added to the channel.
+-  
+-  However in some applications a local named server will never be
+-  available. In this case, all subsequent queries on the channel will
+-  fail.
+-  
+-  If we know this ahead of time, then it may be preferred to fail channel
+-  initialization directly rather than wait for the queries to fail. This
+-  gives better visibility, since we know that the failure is due to
+-  missing servers rather than something going wrong with the queries.
+-  
+-  This PR adds a new flag `ARES_FLAG_NO_DFLT_SVR`, to indicate that a
+-  default local named server should not be added to a channel in this
+-  scenario. Instead, a new error `ARES_EINITNOSERVER` is returned and
+-  initialization fails.
+-  
+-  **Testing**
+-  I have added 2 new FV tests:
+-  - `ContainerNoDfltSvrEmptyInit` to test that initialization fails when
+-  no nameservers are available and the flag is set.
+-  - `ContainerNoDfltSvrFullInit` to test that initialization still
+-  succeeds when the flag is set but other nameservers are available.
+-  
+-  Existing FVs are all passing.
+-  
+-  **Documentation**
+-  I have had a go at manually updating the docs to describe the new
+-  flag/error, but couldn't see any contributing guidance about testing
+-  this. Please let me know if you'd like anything more here.
+-  
+-  ---------
+-  
+-  Fix By: Oliver Welsh (@oliverwelsh)
+-
+-Brad House (18 Feb 2024)
+-- badge should be only main branch
+-
+-- put logo in readme
+-
+-- clang-format
+-
+-GitHub (17 Feb 2024)
+-- [Brad House brought this change]
+-
+-  Add ares_queue_active_queries() (#712)
+-  
+-  Add a function to request the number of active queries from an ares
+-  channel. This will return the number of inflight requests to dns
+-  servers. Some functions like `ares_getaddrinfo()` when using `AF_UNSPEC`
+-  may enqueue multiple queries which will be reflected in this count.
+-  
+-  In the future, if we implement support for queuing (e.g. for throttling
+-  purposes), and/or implement support for tracking user-requested queries
+-  (e.g. for cancelation), we can provide additional functions for
+-  inspecting those queues.
+-  
+-  Fix By: Brad House (@bradh352)
+-
+-- [Vojtěch Vobr brought this change]
+-
+-  fix leaking DNS suffix search list on Windows (#711)
+-  
+-  ares__strsplit provides a newly allocated buffer, so suffix list in
+-  line variable isn't referenced anymore. Related ares_free seems to
+-  have gone missing during refactoring made in #594
+-  
+-  Fix By: Vojtěch Vobr (@vojtechvobr)
+-
+-- [Brad House brought this change]
+-
+-  Add ares_queue_wait_empty() for use with EventThreads (#710)
+-  
+-  It may be useful to wait for the queue to be empty under certain conditions (mainly test cases), expose a function to efficiently do this and rework test cases to use it.
+-  
+-  Fix By: Brad House (@bradh352)
+-
+-- [Cheng Zhao brought this change]
+-
+-  Fix warning about ignoring result of write (#709)
+-  
+-  Fix the compiler warning from clang:
+-  
+-  ```
+-  ares_event_wake_pipe.c:120:3: error: ignoring return value of function declared with 'warn_unused_result' attribute [-Werror,-Wunused-result]
+-    120 |   write(p->filedes[1], "1", 1);
+-        |   ^~~~~ ~~~~~~~~~~~~~~~~~~~~~
+-  1 error generated.
+-  ```
+-  
+-  Fix By: Cheng Zhao (@zcbenz)
+-
+-Brad House (5 Feb 2024)
+-- CMake: don't override target output locations if not top-level
+-  
+-  CMake was unconditionally setting output locations globally, but
+-  it should not do that if it is not the top-level project (e.g.
+-  during chain building).  Detect this fact and only set the output
+-  location when top level.
+-  
+-  Fixes Issue: #708
+-  Fix By: Anthony Alayo (@anthonyalayo)
+-
+-- make docs match PR #705
+-
+-GitHub (31 Jan 2024)
+-- [Cristian Rodríguez brought this change]
+-
+-  lower EDNSPACKETSZ to 1232 (#705)
+-  
+-  In 2020, it was agreed this is optimal maximum size and all
+-  major server software was updated to reflect this.
+-  
+-  see https://www.dnsflagday.net/2020/#faq
+-  
+-  Fix By: Cristian Rodríguez (@crrodriguez)
+-
+-Brad House (30 Jan 2024)
+-- fix version
+-
+-- fix typo
+-
+-- bad symlink
+-
+-- attempt to fix pkgconfig on windows for static builds
+-
+-GitHub (28 Jan 2024)
+-- [Andriy Utkin brought this change]
+-
+-  docs/ares_init_options.3: fix args in analogy (#701)
+-  
+-  Fix By: Andriy Utkin <hello@autkin.net>
+-
+-- [Brad House brought this change]
+-
+-  sonarcloud: fix minor codesmells (#702)
+-  
+-  Fix minor codesmells, mostly related to missing 'const' in the new event system.
+-  
+-  Fix By: Brad House (@bradh352)
+-
+-Brad House (26 Jan 2024)
+-- remove outdated copyright text
+-
+-- spelling
+-
+-- sanity check GTest includes GMock component
+-
+-GitHub (26 Jan 2024)
+-- [Brad House brought this change]
+-
+-  build-time disabled threads breaks c-ares (#700)
+-  
+-  Regression introduced in 1.26.0, building c-ares with threading disabled results in ares_init{_options}() failing.
+-  
+-  Also adds a new CI test case to prevent this regression in the future.
+-  
+-  Fixes Bug: #699
+-  Fix By: Brad House (@bradh352)
+-
+ Version 1.26.0 (25 Jan 2024)
+ 
+ Brad House (25 Jan 2024)
+@@ -6224,3 +6035,113 @@ Yang Tse (30 Jan 2013)
+   URL: http://curl.haxx.se/mail/lib-2013-01/0306.html
+ 
+ - zz40-xc-ovr.m4: reinstate strict AC_REQUIRE macro dependencies
++
++- zz40-xc-ovr.m4: avoid double single-quote usage
++
++- zz40-xc-ovr.m4: parentheses balancing of 'case' statements
++  
++  m4 quadrigraph shell comment technique allows proper autoconf
++  parentheses balancing in shell 'case' statements. The presence
++  of unbalanced parentheses may otherwise trigger expansion bugs.
++
++- zz40-xc-ovr.m4: internals overhauling
++  
++  - Update comments
++  - Execute commands in subshells
++  - Faster path separator check
++  - Fix missing 'test' command
++  - Rename private macros
++  - Minimize AC_REQUIRE usage
++
++- zz40-xc-ovr.m4: redirect errors and warnings to stderr
++
++- configure: use XC_CONFIGURE_PREAMBLE early checks
++  
++  Some basic checks we make were placed early enough in generated
++  configure script when using autoconf 2.5X versions. Newer autoconf
++  versions expand these checks much further into the configure script,
++  rendering them useless. Using XC_CONFIGURE_PREAMBLE fixes placement
++  of early intended checks across all our autoconf supported versions.
++
++- zz40-xc-ovr.m4: provide XC_CONFIGURE_PREAMBLE macro
++
++- configure: autotools compatibility fixes - step I
++  
++  Fix proper macro expansion order across autotools versions for
++  C compiler and preprocessor program checks.
++
++- configure: fix automake 1.13 compatibility
++  
++  Tested with:
++  
++  buildconf: autoconf version 2.69
++  buildconf: autom4te version 2.69
++  buildconf: autoheader version 2.69
++  buildconf: automake version 1.13.1
++  buildconf: aclocal version 1.13.1
++  buildconf: libtool version 2.4
++  buildconf: GNU m4 version 1.4.16
++
++- ares_private.h: use again memdebug.h instead of curl_memdebug.h
++
++- configure.ac: replace AM_CONFIG_HEADER with AC_CONFIG_HEADERS
++  
++  automake 1.13 errors if AM_CONFIG_HEADER is used in configure script.
++
++- cares-override.m4: provide AC_CONFIG_MACRO_DIR definition conditionally
++  
++  Provide a 'traceable' AC_CONFIG_MACRO_DIR definition only when using
++  an autoconf version that does not provide it, instead of what we were
++  doing up to now of providing and overriding AC_CONFIG_MACRO_DIR for
++  all autoconf versions.
++
++- ares_private.h: use curl_memdebug.h instead of memdebug.h
++
++- vc6cares.dsp: add ares_create_query.c and ares_parse_soa_reply.c
++
++- cares-functions.m4: improve gethostname arg 2 data type check
++
++- setup_once.h: HP-UX specific 'bool', 'false' and 'true' definitions.
++  
++  Also reverts commit bceb40095a
++
++- configure: check if compiler halts on function prototype mismatch
++
++- cares-functions.m4: add gethostname arg 2 data type check and definition
++
++- cares-functions.m4: update thread-safeness detection of getaddrinfo()
++  
++  Take in account that POSIX standard Issue 7 drops h_errno support. Now, we also
++  consider getaddrinfo() to be thread-safe when (_POSIX_C_SOURCE >= 200809L) or
++  (_XOPEN_SOURCE >= 700) independently of whether h_errno exists or not.
++  
++  Take in account that h_errno might be a modifiable lvalue not defined as
++  a C preprocessor macro.
++
++- setup_once.h: HP-UX <sys/socket.h> issue workaround
++  
++  Issue: When building a 32bit target with large file support HP-UX
++  <sys/socket.h> header file may simultaneously provide two different
++  sets of declarations for sendfile and sendpath functions, one with
++  static and another with external linkage. Given that we do not use
++  mentioned functions we really don't care which linkage is the
++  appropriate one, but on the other hand, the double declaration emmits
++  warnings when using the HP-UX compiler and errors when using modern
++  gcc versions resulting in fatal compilation errors.
++  
++  Mentioned issue is now fixed as long as we don't use sendfile nor
++  sendpath functions.
++
++- setup_once.h: refactor inclusion of <unistd.h> and <sys/socket.h>
++  
++  Inclusion of these two header files now done in setup_once.h
++
++- Header inclusion clean-up
++  
++  Remove header inclusions already done in setup_once.h
++
++- setup_once.h: HP-UX specific TRUE and FALSE definitions
++  
++  Some HP-UX system headers require TRUE defined to 1 and FALSE to 0.
++
++- ares_timeout.c: fix compiler warning
+diff --git a/deps/cares/CMakeLists.txt b/deps/cares/CMakeLists.txt
+index e951cafd7b..24d1b41fb7 100644
+--- a/deps/cares/CMakeLists.txt
++++ b/deps/cares/CMakeLists.txt
+@@ -12,10 +12,10 @@ INCLUDE (CheckCSourceCompiles)
+ INCLUDE (CheckStructHasMember)
+ INCLUDE (CheckLibraryExists)
+ 
+-PROJECT (c-ares LANGUAGES C VERSION "1.27.0" )
++PROJECT (c-ares LANGUAGES C VERSION "1.26.0" )
+ 
+ # Set this version before release
+-SET (CARES_VERSION "1.27.0")
++SET (CARES_VERSION "1.26.0")
+ 
+ INCLUDE (GNUInstallDirs) # include this *AFTER* PROJECT(), otherwise paths are wrong.
+ 
+@@ -30,7 +30,7 @@ INCLUDE (GNUInstallDirs) # include this *AFTER* PROJECT(), otherwise paths are w
+ # For example, a version of 4:0:2 would generate output such as:
+ #    libname.so   -> libname.so.2
+ #    libname.so.2 -> libname.so.2.2.0
+-SET (CARES_LIB_VERSIONINFO "14:0:12")
++SET (CARES_LIB_VERSIONINFO "13:0:11")
+ 
+ 
+ OPTION (CARES_STATIC        "Build as a static library"                                             OFF)
+@@ -91,15 +91,11 @@ IF (CARES_SYMBOL_HIDING)
+ 	CMAKE_POLICY (SET CMP0063 NEW)
+ ENDIF ()
+ 
+-# Keep build organized, but only if it is the top-level project.
+-# CMake 3.21 or later has PROJECT_IS_TOP_LEVEL, but we aren't yet depending on
+-# that version.
+-IF (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+-	SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+-	SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+-	SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+-	SET (PACKAGE_DIRECTORY ${PROJECT_BINARY_DIR}/package)
+-ENDIF ()
++# Keep build organized.
++SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
++SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
++SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
++SET (PACKAGE_DIRECTORY ${PROJECT_BINARY_DIR}/package)
+ 
+ # Destinations for installing different kinds of targets (pass to install command).
+ SET (TARGETS_INST_DEST
+diff --git a/deps/cares/README.md b/deps/cares/README.md
+index 70aa67fce6..2d9e0fff92 100644
+--- a/deps/cares/README.md
++++ b/deps/cares/README.md
+@@ -1,6 +1,7 @@
+-# [![c-ares logo](https://c-ares.org/art/c-ares-logo.svg)](https://c-ares.org/)
++c-ares
++======
+ 
+-[![Build Status](https://api.cirrus-ci.com/github/c-ares/c-ares.svg?branch=main)](https://cirrus-ci.com/github/c-ares/c-ares)
++[![Build Status](https://api.cirrus-ci.com/github/c-ares/c-ares.svg)](https://cirrus-ci.com/github/c-ares/c-ares)
+ [![Windows Build Status](https://ci.appveyor.com/api/projects/status/aevgc5914tm72pvs/branch/master?svg=true)](https://ci.appveyor.com/project/c-ares/c-ares/branch/master)
+ [![Coverage Status](https://coveralls.io/repos/github/c-ares/c-ares/badge.svg)](https://coveralls.io/github/c-ares/c-ares)
+ [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/291/badge)](https://bestpractices.coreinfrastructure.org/projects/291)
+@@ -28,7 +29,8 @@ You'll find all c-ares details and news here:
+         https://c-ares.org/
+ 
+ 
+-## Notes for c-ares hackers
++Notes for c-ares hackers
++------------------------
+ 
+ * The distributed `ares_build.h` file is only intended to be used on systems
+   which can not run the also distributed configure script.
+diff --git a/deps/cares/RELEASE-NOTES.md b/deps/cares/RELEASE-NOTES.md
+index 0fdcbc6b96..4dddfe0f44 100644
+--- a/deps/cares/RELEASE-NOTES.md
++++ b/deps/cares/RELEASE-NOTES.md
+@@ -1,40 +1,38 @@
+-## c-ares version 1.27.0 - Feb 23 2024
++## c-ares version 1.26.0 - Jan 26 2024
+ 
+-This is a security, feature, and bugfix release.
+-
+-Security:
+-
+-* Moderate. CVE-2024-25629. Reading malformatted `/etc/resolv.conf`,
+-  `/etc/nsswitch.conf` or the `HOSTALIASES` file could result in a crash.
+-  [GHSA-mg26-v6qh-x48q](https://github.com/c-ares/c-ares/security/advisories/GHSA-mg26-v6qh-x48q)
++This is a feature and bugfix release.
+ 
+ Features:
+ 
+-* New function `ares_queue_active_queries()` to retrieve number of in-flight
+-  queries. [PR #712](https://github.com/c-ares/c-ares/pull/712)
+-* New function `ares_queue_wait_empty()` to wait for the number of in-flight
+-  queries to reach zero. [PR #710](https://github.com/c-ares/c-ares/pull/710)
+-* New `ARES_FLAG_NO_DEFLT_SVR` for `ares_init_options()` to return a failure if
+-  no DNS servers can be found rather than attempting to use `127.0.0.1`. This
+-  also introduces a new ares status code of `ARES_ENOSERVER`. [PR #713](https://github.com/c-ares/c-ares/pull/713)
++* Event Thread support.  Integrators are no longer requried to monitor the
++  file descriptors registered by c-ares for events and call `ares_process()`
++  when enabling the event thread feature via `ARES_OPT_EVENT_THREAD` passed
++  to `ares_init_options()`. [PR #696](https://github.com/c-ares/c-ares/pull/696)
++* Added flags to `are_dns_parse()` to force RAW packet parsing.
++  [PR #693](https://github.com/c-ares/c-ares/pull/693)
+ 
+ Changes:
+ 
+-* EDNS Packet size should be 1232 as per DNS Flag Day. [PR #705](https://github.com/c-ares/c-ares/pull/705)
++* Mark `ares_fds()` as deprected.
++  [PR #691](https://github.com/c-ares/c-ares/pull/691)
+ 
+ Bugfixes:
+ 
+-* Windows DNS suffix search list memory leak. [PR #711](https://github.com/c-ares/c-ares/pull/711)
+-* Fix warning due to ignoring return code of `write()`. [PR #709](https://github.com/c-ares/c-ares/pull/709)
+-* CMake: don't override target output locations if not top-level. [Issue #708](https://github.com/c-ares/c-ares/issues/708)
+-* Fix building c-ares without thread support. [PR #700](https://github.com/c-ares/c-ares/pull/700)
++* `adig`: Differentiate between internal and server errors.
++  [e10b16a](https://github.com/c-ares/c-ares/commit/e10b16a)
++* Autotools allow make to override CFLAGS/CPPFLAGS/CXXFLAGS.
++  [PR #695](https://github.com/c-ares/c-ares/pull/695)
++* Autotools: fix building for 32bit windows due to stdcall symbol mangling.
++  [PR #689](https://github.com/c-ares/c-ares/pull/689)
++* RR Name should not be sanity checked against the Question.
++  [PR #685](https://github.com/c-ares/c-ares/pull/685)
+ 
+ Thanks go to these friendly people for their efforts and contributions for this release:
+ 
+-* Anthony Alayo (@anthonyalayo)
+ * Brad House (@bradh352)
+-* Cheng Zhao (@zcbenz)
+-* Cristian Rodríguez (@crrodriguez)
+ * Daniel Stenberg (@bagder)
+-* Oliver Welsh (@oliverwelsh)
+-* Vojtěch Vobr (@vojtechvobr)
++* Erik Lax (@eriklax)
++* Gisle Vanem (@gvanem)
++
++
++
+diff --git a/deps/cares/aminclude_static.am b/deps/cares/aminclude_static.am
+index e3fc636c7b..fd5cb10ee9 100644
+--- a/deps/cares/aminclude_static.am
++++ b/deps/cares/aminclude_static.am
+@@ -1,6 +1,6 @@
+ 
+ # aminclude_static.am generated automatically by Autoconf
+-# from AX_AM_MACROS_STATIC on Fri Feb 23 08:24:27 CET 2024
++# from AX_AM_MACROS_STATIC on Fri Jan 26 17:16:23 CET 2024
+ 
+ 
+ # Code coverage
+diff --git a/deps/cares/configure b/deps/cares/configure
+index ac3c7b55db..8892c7827e 100755
+--- a/deps/cares/configure
++++ b/deps/cares/configure
+@@ -1,6 +1,6 @@
+ #! /bin/sh
+ # Guess values for system-dependent variables and create Makefiles.
+-# Generated by GNU Autoconf 2.71 for c-ares 1.27.0.
++# Generated by GNU Autoconf 2.71 for c-ares 1.26.0.
+ #
+ # Report bugs to <c-ares mailing list: http://lists.haxx.se/listinfo/c-ares>.
+ #
+@@ -621,8 +621,8 @@ MAKEFLAGS=
+ # Identity of this package.
+ PACKAGE_NAME='c-ares'
+ PACKAGE_TARNAME='c-ares'
+-PACKAGE_VERSION='1.27.0'
+-PACKAGE_STRING='c-ares 1.27.0'
++PACKAGE_VERSION='1.26.0'
++PACKAGE_STRING='c-ares 1.26.0'
+ PACKAGE_BUGREPORT='c-ares mailing list: http://lists.haxx.se/listinfo/c-ares'
+ PACKAGE_URL=''
+ 
+@@ -664,7 +664,6 @@ am__EXEEXT_TRUE
+ LTLIBOBJS
+ LIBOBJS
+ BUILD_SUBDIRS
+-PKGCONFIG_CFLAGS
+ AM_CPPFLAGS
+ AM_CFLAGS
+ BUILD_TESTS_FALSE
+@@ -1420,7 +1419,7 @@ if test "$ac_init_help" = "long"; then
+   # Omit some internal or obsolete options to make the list less imposing.
+   # This message is too long to be a string in the A/UX 3.1 sh.
+   cat <<_ACEOF
+-\`configure' configures c-ares 1.27.0 to adapt to many kinds of systems.
++\`configure' configures c-ares 1.26.0 to adapt to many kinds of systems.
+ 
+ Usage: $0 [OPTION]... [VAR=VALUE]...
+ 
+@@ -1491,7 +1490,7 @@ fi
+ 
+ if test -n "$ac_init_help"; then
+   case $ac_init_help in
+-     short | recursive ) echo "Configuration of c-ares 1.27.0:";;
++     short | recursive ) echo "Configuration of c-ares 1.26.0:";;
+    esac
+   cat <<\_ACEOF
+ 
+@@ -1627,7 +1626,7 @@ fi
+ test -n "$ac_init_help" && exit $ac_status
+ if $ac_init_version; then
+   cat <<\_ACEOF
+-c-ares configure 1.27.0
++c-ares configure 1.26.0
+ generated by GNU Autoconf 2.71
+ 
+ Copyright (C) 2021 Free Software Foundation, Inc.
+@@ -2251,7 +2250,7 @@ cat >config.log <<_ACEOF
+ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
+ 
+-It was created by c-ares $as_me 1.27.0, which was
++It was created by c-ares $as_me 1.26.0, which was
+ generated by GNU Autoconf 2.71.  Invocation command line was
+ 
+   $ $0$ac_configure_args_raw
+@@ -3225,7 +3224,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+ 
+ 
+ 
+-CARES_VERSION_INFO="14:0:12"
++CARES_VERSION_INFO="13:0:11"
+ 
+ 
+ 
+@@ -5907,7 +5906,7 @@ fi
+ 
+ # Define the identity of the package.
+  PACKAGE='c-ares'
+- VERSION='1.27.0'
++ VERSION='1.26.0'
+ 
+ 
+ printf "%s\n" "#define PACKAGE \"$PACKAGE\"" >>confdefs.h
+@@ -20199,7 +20198,6 @@ else $as_nop
+   AM_CPPFLAGS="-DCARES_STATICLIB"
+ fi
+ 
+-    PKGCONFIG_CFLAGS="-DCARES_STATICLIB"
+     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ printf "%s\n" "yes" >&6; }
+   else
+@@ -25376,7 +25374,6 @@ fi
+ 
+ 
+ 
+-
+ ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile src/lib/Makefile src/tools/Makefile docs/Makefile libcares.pc"
+ 
+ if test -z "$BUILD_TESTS_TRUE"; then :
+@@ -25931,7 +25928,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+ # report actual input values of CONFIG_FILES etc. instead of their
+ # values after options handling.
+ ac_log="
+-This file was extended by c-ares $as_me 1.27.0, which was
++This file was extended by c-ares $as_me 1.26.0, which was
+ generated by GNU Autoconf 2.71.  Invocation command line was
+ 
+   CONFIG_FILES    = $CONFIG_FILES
+@@ -25999,7 +25996,7 @@ ac_cs_config_escaped=`printf "%s\n" "$ac_cs_config" | sed "s/^ //; s/'/'\\\\\\\\
+ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ ac_cs_config='$ac_cs_config_escaped'
+ ac_cs_version="\\
+-c-ares config.status 1.27.0
++c-ares config.status 1.26.0
+ configured by $0, generated by GNU Autoconf 2.71,
+   with options \\"\$ac_cs_config\\"
+ 
+diff --git a/deps/cares/configure.ac b/deps/cares/configure.ac
+index 1a3ba8c3fc..f820d37dd0 100644
+--- a/deps/cares/configure.ac
++++ b/deps/cares/configure.ac
+@@ -2,10 +2,10 @@ dnl Copyright (C) The c-ares project and its contributors
+ dnl SPDX-License-Identifier: MIT
+ AC_PREREQ([2.69])
+ 
+-AC_INIT([c-ares], [1.27.0],
++AC_INIT([c-ares], [1.26.0],
+   [c-ares mailing list: http://lists.haxx.se/listinfo/c-ares])
+ 
+-CARES_VERSION_INFO="14:0:12"
++CARES_VERSION_INFO="13:0:11"
+ dnl This flag accepts an argument of the form current[:revision[:age]]. So,
+ dnl passing -version-info 3:12:1 sets current to 3, revision to 12, and age to
+ dnl 1.
+@@ -200,7 +200,6 @@ if test "x$enable_shared" = "xno" -a "x$enable_static" = "xyes" ; then
+   AC_MSG_CHECKING([whether we need CARES_STATICLIB definition])
+   if test "$ac_cv_native_windows" = "yes" ; then
+     AX_APPEND_FLAG([-DCARES_STATICLIB], [AM_CPPFLAGS])
+-    PKGCONFIG_CFLAGS="-DCARES_STATICLIB"
+     AC_MSG_RESULT([yes])
+   else
+     AC_MSG_RESULT([no])
+@@ -907,7 +906,6 @@ AM_CONDITIONAL(BUILD_TESTS, test "x$build_tests" = "xyes")
+ 
+ AC_SUBST(AM_CFLAGS)
+ AC_SUBST(AM_CPPFLAGS)
+-AC_SUBST(PKGCONFIG_CFLAGS)
+ AC_SUBST(BUILD_SUBDIRS)
+ 
+ AC_CONFIG_FILES([Makefile           \
+diff --git a/deps/cares/docs/Makefile.inc b/deps/cares/docs/Makefile.inc
+index 3645a7fcdd..e3800159be 100644
+--- a/deps/cares/docs/Makefile.inc
++++ b/deps/cares/docs/Makefile.inc
+@@ -105,9 +105,6 @@ MANPAGES = ares_cancel.3		\
+   ares_parse_uri_reply.3		\
+   ares_process.3			\
+   ares_query.3				\
+-  ares_queue.3				\
+-  ares_queue_active_queries.3		\
+-  ares_queue_wait_empty.3		\
+   ares_reinit.3				\
+   ares_save_options.3			\
+   ares_search.3				\
+diff --git a/deps/cares/docs/adig.1 b/deps/cares/docs/adig.1
+index 48b491b593..f747d15b67 100644
+--- a/deps/cares/docs/adig.1
++++ b/deps/cares/docs/adig.1
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright (C) the Massachusetts Institute of Technology.
+ .\" Copyright (C) Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ADIG "1" "April 2011" "c-ares utilities"
+@@ -65,3 +78,20 @@ Report bugs to the c-ares mailing list:
+ .SH "SEE ALSO"
+ .PP
+ acountry(1), ahost(1).
++.SH COPYRIGHT
++This utility is based on code/ideas contained in software written by Greg Hudson (ares)
++carrying the following notice:
++.br
++Copyright 1998 by the Massachusetts Institute of Technology.
++.br
++Permission to use, copy, modify, and distribute this software and its
++documentation for any purpose and without fee is hereby granted,
++provided that the above copyright notice appear in all copies and that
++both that copyright notice and this permission notice appear in
++supporting documentation, and that the name of M.I.T. not be used in
++advertising or publicity pertaining to distribution of the software
++without specific, written prior permission. M.I.T. makes no
++representations about the suitability of this software for any
++purpose. It is provided "as is" without express or implied warranty.
++.br
++No further copyright claims are being made by the author(s) of this utility.
+diff --git a/deps/cares/docs/ahost.1 b/deps/cares/docs/ahost.1
+index 5feed981ab..19bde6b4ba 100644
+--- a/deps/cares/docs/ahost.1
++++ b/deps/cares/docs/ahost.1
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright (C) the Massachusetts Institute of Technology.
+ .\" Copyright (C) Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH AHOST "1" "April 2011" "c-ares utilities"
+@@ -47,4 +60,21 @@ Report bugs to the c-ares mailing list:
+ \fBhttps://lists.haxx.se/listinfo/c-ares\fR
+ .SH "SEE ALSO"
+ .PP
+-acountry(1), adig(1)
++acountry(1), adig(1).
++.SH COPYRIGHT
++This utility is based on code/ideas contained in software written by Greg Hudson (ares)
++carrying the following notice:
++.br
++Copyright 1998 by the Massachusetts Institute of Technology.
++.br
++Permission to use, copy, modify, and distribute this software and its
++documentation for any purpose and without fee is hereby granted,
++provided that the above copyright notice appear in all copies and that
++both that copyright notice and this permission notice appear in
++supporting documentation, and that the name of M.I.T. not be used in
++advertising or publicity pertaining to distribution of the software
++without specific, written prior permission. M.I.T. makes no
++representations about the suitability of this software for any
++purpose. It is provided "as is" without express or implied warranty.
++.br
++No further copyright claims are being made by the author(s) of this utility.
+diff --git a/deps/cares/docs/ares_cancel.3 b/deps/cares/docs/ares_cancel.3
+index 4eecaade24..0e11b6cae6 100644
+--- a/deps/cares/docs/ares_cancel.3
++++ b/deps/cares/docs/ares_cancel.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_CANCEL 3 "31 March 2004"
+diff --git a/deps/cares/docs/ares_create_query.3 b/deps/cares/docs/ares_create_query.3
+index 5fb59f9206..1f5532e891 100644
+--- a/deps/cares/docs/ares_create_query.3
++++ b/deps/cares/docs/ares_create_query.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_CREATE_QUERY 3 "17 Aug 2012"
+diff --git a/deps/cares/docs/ares_destroy.3 b/deps/cares/docs/ares_destroy.3
+index 8548d59c54..a792489036 100644
+--- a/deps/cares/docs/ares_destroy.3
++++ b/deps/cares/docs/ares_destroy.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_DESTROY 3 "7 December 2004"
+diff --git a/deps/cares/docs/ares_destroy_options.3 b/deps/cares/docs/ares_destroy_options.3
+index 432c4b10d7..96520d3de3 100644
+--- a/deps/cares/docs/ares_destroy_options.3
++++ b/deps/cares/docs/ares_destroy_options.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_DESTROY_OPTIONS 3 "1 June 2007"
+diff --git a/deps/cares/docs/ares_dup.3 b/deps/cares/docs/ares_dup.3
+index 2395fe180a..15b81a666c 100644
+--- a/deps/cares/docs/ares_dup.3
++++ b/deps/cares/docs/ares_dup.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright (C) 2004-2009 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_DUP 3 "26 May 2009"
+diff --git a/deps/cares/docs/ares_expand_name.3 b/deps/cares/docs/ares_expand_name.3
+index 7bd43842a2..2f3866bb00 100644
+--- a/deps/cares/docs/ares_expand_name.3
++++ b/deps/cares/docs/ares_expand_name.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_EXPAND_NAME 3 "20 Nov 2009"
+diff --git a/deps/cares/docs/ares_expand_string.3 b/deps/cares/docs/ares_expand_string.3
+index 22d6654e50..572881853d 100644
+--- a/deps/cares/docs/ares_expand_string.3
++++ b/deps/cares/docs/ares_expand_string.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_EXPAND_NAME 3 "20 Nov 2009"
+diff --git a/deps/cares/docs/ares_free_data.3 b/deps/cares/docs/ares_free_data.3
+index a4de4dbf17..67cde08e50 100644
+--- a/deps/cares/docs/ares_free_data.3
++++ b/deps/cares/docs/ares_free_data.3
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
+ .\" Copyright (C) 2004-2010 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_FREE_DATA 3 "5 March 2010"
+diff --git a/deps/cares/docs/ares_free_hostent.3 b/deps/cares/docs/ares_free_hostent.3
+index 973dc9dc55..ef7840800b 100644
+--- a/deps/cares/docs/ares_free_hostent.3
++++ b/deps/cares/docs/ares_free_hostent.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_FREE_HOSTENT 3 "23 July 1998"
+diff --git a/deps/cares/docs/ares_free_string.3 b/deps/cares/docs/ares_free_string.3
+index 9871b48e26..7a4063f8f7 100644
+--- a/deps/cares/docs/ares_free_string.3
++++ b/deps/cares/docs/ares_free_string.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2000 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_FREE_STRING 3 "4 February 2004"
+diff --git a/deps/cares/docs/ares_freeaddrinfo.3 b/deps/cares/docs/ares_freeaddrinfo.3
+index 0f2a6ae024..8a3bb12a48 100644
+--- a/deps/cares/docs/ares_freeaddrinfo.3
++++ b/deps/cares/docs/ares_freeaddrinfo.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_FREEADDRINFO 3 "31 October 2018"
+diff --git a/deps/cares/docs/ares_get_servers.3 b/deps/cares/docs/ares_get_servers.3
+index 7aeaa50ee1..305a10a269 100644
+--- a/deps/cares/docs/ares_get_servers.3
++++ b/deps/cares/docs/ares_get_servers.3
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
+ .\" Copyright (C) 2008-2010 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_GET_SERVERS 3 "5 March 2010"
+diff --git a/deps/cares/docs/ares_gethostbyname_file.3 b/deps/cares/docs/ares_gethostbyname_file.3
+index 98cb93fd81..06a21b50c1 100644
+--- a/deps/cares/docs/ares_gethostbyname_file.3
++++ b/deps/cares/docs/ares_gethostbyname_file.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_GETHOSTBYNAME 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_inet_ntop.3 b/deps/cares/docs/ares_inet_ntop.3
+index b5ae557a27..83306a1a12 100644
+--- a/deps/cares/docs/ares_inet_ntop.3
++++ b/deps/cares/docs/ares_inet_ntop.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright (C) 2013 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_INET_NTOP 3 "17 Feb 2013"
+diff --git a/deps/cares/docs/ares_inet_pton.3 b/deps/cares/docs/ares_inet_pton.3
+index ca95010b95..d727533cff 100644
+--- a/deps/cares/docs/ares_inet_pton.3
++++ b/deps/cares/docs/ares_inet_pton.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright (C) 2013 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_INET_PTON 3 "17 Feb 2013"
+diff --git a/deps/cares/docs/ares_init_options.3 b/deps/cares/docs/ares_init_options.3
+index 000cc1d9a5..7700defd8f 100644
+--- a/deps/cares/docs/ares_init_options.3
++++ b/deps/cares/docs/ares_init_options.3
+@@ -47,7 +47,7 @@ int ares_init(ares_channel_t **\fIchannelptr\fP);
+ .fi
+ .SH DESCRIPTION
+ The \fBares_init(3)\fP function is equivalent to calling
+-\fBares_init_options(channelptr, NULL, 0)\fP.  It is recommended to use
++\fBares_init_options(NULL, 0)\fP.  It is recommended to use
+ \fBares_init_options(3)\fP instead and to set or make configurable the
+ appropriate options for your application.
+ 
+@@ -120,10 +120,6 @@ used to test or debug name servers.
+ .B ARES_FLAG_EDNS
+ Include an EDNS pseudo-resource record (RFC 2671) in generated requests.  As of
+ v1.22, this is on by default if flags are otherwise not set.
+-.TP 23
+-.B ARES_FLAG_NO_DFLT_SVR
+-Do not attempt to add a default local named server if there are no other
+-servers available.  Instead, fail initialization with \fIARES_ENOSERVER\fP.
+ .RE
+ .TP 18
+ .B ARES_OPT_TIMEOUT
+@@ -252,7 +248,7 @@ The receive buffer size to set for the socket.
+ .br
+ The message size to be advertised in EDNS; only takes effect if the
+ .B ARES_FLAG_EDNS
+-flag is set.  Defaults to 1232, the recommended size.
++flag is set.  Defaults to 1280, the recommended size.
+ .TP 18
+ .B ARES_OPT_RESOLVCONF
+ .B char *\fIresolvconf_path\fP;
+@@ -346,9 +342,6 @@ The process's available memory was exhausted.
+ .TP 14
+ .B ARES_ENOTINITIALIZED
+ c-ares library initialization not yet performed.
+-.TP 14
+-.B ARES_ENOSERVER
+-No DNS servers were available to use.
+ .SH NOTES
+ When initializing from
+ .B /etc/resolv.conf,
+diff --git a/deps/cares/docs/ares_library_cleanup.3 b/deps/cares/docs/ares_library_cleanup.3
+index 5eccdbc669..d6d76959b9 100644
+--- a/deps/cares/docs/ares_library_cleanup.3
++++ b/deps/cares/docs/ares_library_cleanup.3
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
+ .\" Copyright (C) 2004-2009 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_LIBRARY_CLEANUP 3 "19 May 2009"
+diff --git a/deps/cares/docs/ares_library_init.3 b/deps/cares/docs/ares_library_init.3
+index f77effb856..2f61ce2fcf 100644
+--- a/deps/cares/docs/ares_library_init.3
++++ b/deps/cares/docs/ares_library_init.3
+@@ -1,6 +1,19 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
+ .\" Copyright (C) 2004-2009 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_LIBRARY_INIT 3 "19 May 2009"
+diff --git a/deps/cares/docs/ares_library_init_android.3 b/deps/cares/docs/ares_library_init_android.3
+index 590fad5c81..5c8bb7537f 100644
+--- a/deps/cares/docs/ares_library_init_android.3
++++ b/deps/cares/docs/ares_library_init_android.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright (C) 2017 by John Schember
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_LIBRARY_INIT_ANDROID 3 "13 Sept 2017"
+diff --git a/deps/cares/docs/ares_library_initialized.3 b/deps/cares/docs/ares_library_initialized.3
+index ece6404d35..8ddc14539a 100644
+--- a/deps/cares/docs/ares_library_initialized.3
++++ b/deps/cares/docs/ares_library_initialized.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright (C) 2016 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_LIBRARY_INITIALIZED 3 "29 Sep 2016"
+diff --git a/deps/cares/docs/ares_mkquery.3 b/deps/cares/docs/ares_mkquery.3
+index 0075347a61..9b9aa80717 100644
+--- a/deps/cares/docs/ares_mkquery.3
++++ b/deps/cares/docs/ares_mkquery.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998, 2000 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_MKQUERY 3 "20 Nov 2009"
+diff --git a/deps/cares/docs/ares_parse_a_reply.3 b/deps/cares/docs/ares_parse_a_reply.3
+index 91f6a3fd8d..8dd20c3dcd 100644
+--- a/deps/cares/docs/ares_parse_a_reply.3
++++ b/deps/cares/docs/ares_parse_a_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_A_REPLY 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_parse_aaaa_reply.3 b/deps/cares/docs/ares_parse_aaaa_reply.3
+index cc11f23439..ebb490464c 100644
+--- a/deps/cares/docs/ares_parse_aaaa_reply.3
++++ b/deps/cares/docs/ares_parse_aaaa_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2005 by Dominick Meglio.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_AAAA_REPLY 3 "20 Nov 2009"
+diff --git a/deps/cares/docs/ares_parse_caa_reply.3 b/deps/cares/docs/ares_parse_caa_reply.3
+index 740562c1f2..ef95769fcc 100644
+--- a/deps/cares/docs/ares_parse_caa_reply.3
++++ b/deps/cares/docs/ares_parse_caa_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2020 Danny Sonnenschein <my.card.god@web.de>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_CAA_REPLY 3 "16 September 2020"
+diff --git a/deps/cares/docs/ares_parse_mx_reply.3 b/deps/cares/docs/ares_parse_mx_reply.3
+index 1516389931..851380ad7e 100644
+--- a/deps/cares/docs/ares_parse_mx_reply.3
++++ b/deps/cares/docs/ares_parse_mx_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_MX_REPLY 3 "4 August 2009"
+diff --git a/deps/cares/docs/ares_parse_naptr_reply.3 b/deps/cares/docs/ares_parse_naptr_reply.3
+index 0b8d5f17fe..b5ef19c508 100644
+--- a/deps/cares/docs/ares_parse_naptr_reply.3
++++ b/deps/cares/docs/ares_parse_naptr_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_NAPTR_REPLY 3 "23 February 2012"
+diff --git a/deps/cares/docs/ares_parse_ns_reply.3 b/deps/cares/docs/ares_parse_ns_reply.3
+index 6ab2d9b51e..2fed14c474 100644
+--- a/deps/cares/docs/ares_parse_ns_reply.3
++++ b/deps/cares/docs/ares_parse_ns_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_NS_REPLY 3 "10 February 2007"
+diff --git a/deps/cares/docs/ares_parse_ptr_reply.3 b/deps/cares/docs/ares_parse_ptr_reply.3
+index 4432e9e3c9..c554ecaa1f 100644
+--- a/deps/cares/docs/ares_parse_ptr_reply.3
++++ b/deps/cares/docs/ares_parse_ptr_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_PTR_REPLY 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_parse_soa_reply.3 b/deps/cares/docs/ares_parse_soa_reply.3
+index 8a80d3fd4a..f816126ff5 100644
+--- a/deps/cares/docs/ares_parse_soa_reply.3
++++ b/deps/cares/docs/ares_parse_soa_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_SOA_REPLY 3 "29 May 2012"
+diff --git a/deps/cares/docs/ares_parse_srv_reply.3 b/deps/cares/docs/ares_parse_srv_reply.3
+index 3d8e8437a0..d16f0d8a4e 100644
+--- a/deps/cares/docs/ares_parse_srv_reply.3
++++ b/deps/cares/docs/ares_parse_srv_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_SRV_REPLY 3 "4 August 2009"
+diff --git a/deps/cares/docs/ares_parse_txt_reply.3 b/deps/cares/docs/ares_parse_txt_reply.3
+index f85c67fad9..22807facf5 100644
+--- a/deps/cares/docs/ares_parse_txt_reply.3
++++ b/deps/cares/docs/ares_parse_txt_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_TXT_REPLY 3 "27 October 2009"
+diff --git a/deps/cares/docs/ares_parse_uri_reply.3 b/deps/cares/docs/ares_parse_uri_reply.3
+index 3044d4ad6f..d2ec037bda 100644
+--- a/deps/cares/docs/ares_parse_uri_reply.3
++++ b/deps/cares/docs/ares_parse_uri_reply.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PARSE_URI_REPLY 3 "14 August 2020"
+diff --git a/deps/cares/docs/ares_process.3 b/deps/cares/docs/ares_process.3
+index 94c98f60a3..c4d118c1f5 100644
+--- a/deps/cares/docs/ares_process.3
++++ b/deps/cares/docs/ares_process.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_PROCESS 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_query.3 b/deps/cares/docs/ares_query.3
+index 00e44f5259..f87a564822 100644
+--- a/deps/cares/docs/ares_query.3
++++ b/deps/cares/docs/ares_query.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_QUERY 3 "24 July 1998"
+@@ -121,10 +134,6 @@ The query was cancelled.
+ The name service channel
+ .I channel
+ is being destroyed; the query will not be completed.
+-.TP 19
+-.B ARES_ENOSERVER
+-The query will not be completed because no DNS servers were configured on the
+-channel.
+ .PP
+ The callback argument
+ .I timeouts
+diff --git a/deps/cares/docs/ares_save_options.3 b/deps/cares/docs/ares_save_options.3
+index ae171dc4c2..7beecd5277 100644
+--- a/deps/cares/docs/ares_save_options.3
++++ b/deps/cares/docs/ares_save_options.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SAVE_OPTIONS 3 "5 March 2010"
+diff --git a/deps/cares/docs/ares_search.3 b/deps/cares/docs/ares_search.3
+index 08246d349d..e4db64db8c 100644
+--- a/deps/cares/docs/ares_search.3
++++ b/deps/cares/docs/ares_search.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SEARCH 3 "24 July 1998"
+@@ -122,9 +135,6 @@ The query was cancelled.
+ The name service channel
+ .I channel
+ is being destroyed; the query will not be completed.
+-.TP 19
+-.B ARES_ENOSERVER
+-No query completed successfully; no DNS servers were configured on the channel.
+ .PP
+ The callback argument
+ .I timeouts
+diff --git a/deps/cares/docs/ares_send.3 b/deps/cares/docs/ares_send.3
+index 1fe1c0273e..8126647f4b 100644
+--- a/deps/cares/docs/ares_send.3
++++ b/deps/cares/docs/ares_send.3
+@@ -77,10 +77,6 @@ The query was cancelled.
+ The name service channel
+ .I channel
+ is being destroyed; the query will not be completed.
+-.TP 19
+-.B ARES_ENOSERVER
+-The query will not be completed because no DNS servers were configured on the
+-channel.
+ .PP
+ The callback argument
+ .I timeouts
+diff --git a/deps/cares/docs/ares_set_local_dev.3 b/deps/cares/docs/ares_set_local_dev.3
+index 2289339768..54dfcc51ee 100644
+--- a/deps/cares/docs/ares_set_local_dev.3
++++ b/deps/cares/docs/ares_set_local_dev.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2010 by Ben Greear <greearb@candelatech.com>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_LOCAL_DEV 3 "30 June 2010"
+diff --git a/deps/cares/docs/ares_set_local_ip4.3 b/deps/cares/docs/ares_set_local_ip4.3
+index 83ad8b86c1..51d7d02bad 100644
+--- a/deps/cares/docs/ares_set_local_ip4.3
++++ b/deps/cares/docs/ares_set_local_ip4.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2010 by Ben Greear <greearb@candelatech.com>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_LOCAL_IP4 3 "30 June 2010"
+diff --git a/deps/cares/docs/ares_set_local_ip6.3 b/deps/cares/docs/ares_set_local_ip6.3
+index fafae8dc91..57d1f2315d 100644
+--- a/deps/cares/docs/ares_set_local_ip6.3
++++ b/deps/cares/docs/ares_set_local_ip6.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2010 by Ben Greear <greearb@candelatech.com>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_LOCAL_IP6 3 "30 June 2010"
+diff --git a/deps/cares/docs/ares_set_servers.3 b/deps/cares/docs/ares_set_servers.3
+index 410c279c80..ca58231b27 100644
+--- a/deps/cares/docs/ares_set_servers.3
++++ b/deps/cares/docs/ares_set_servers.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2010 by Ben Greear <greearb@candelatech.com>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_SERVERS 3 "5 March 2010"
+diff --git a/deps/cares/docs/ares_set_servers_csv.3 b/deps/cares/docs/ares_set_servers_csv.3
+index 7d37a90fa4..95abedfb80 100644
+--- a/deps/cares/docs/ares_set_servers_csv.3
++++ b/deps/cares/docs/ares_set_servers_csv.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2010 by Ben Greear <greearb@candelatech.com>
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_SERVERS_CSV 3 "5 Dec 2023"
+diff --git a/deps/cares/docs/ares_set_sortlist.3 b/deps/cares/docs/ares_set_sortlist.3
+index eb7bf6dc9a..c93e5262b8 100644
+--- a/deps/cares/docs/ares_set_sortlist.3
++++ b/deps/cares/docs/ares_set_sortlist.3
+@@ -1,5 +1,17 @@
+ .\"
+ .\" Copyright (C) Daniel Stenberg
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_SET_SORTLIST 3 "23 November 2015"
+diff --git a/deps/cares/docs/ares_strerror.3 b/deps/cares/docs/ares_strerror.3
+index 32eab05f31..745a0d607b 100644
+--- a/deps/cares/docs/ares_strerror.3
++++ b/deps/cares/docs/ares_strerror.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_STRERROR 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_threadsafety.3 b/deps/cares/docs/ares_threadsafety.3
+index a3c29d5f6e..119c79ff5a 100644
+--- a/deps/cares/docs/ares_threadsafety.3
++++ b/deps/cares/docs/ares_threadsafety.3
+@@ -1,7 +1,7 @@
+ .\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+-.TH ARES_THREADSAFETY 3 "26 November 2023"
++.TH ARES_REINIT 3 "26 November 2023"
+ .SH NAME
+ ares_threadsafety \- Query if c-ares was built with thread-safety
+ .SH SYNOPSIS
+diff --git a/deps/cares/docs/ares_timeout.3 b/deps/cares/docs/ares_timeout.3
+index c1e3954599..fd33193fe8 100644
+--- a/deps/cares/docs/ares_timeout.3
++++ b/deps/cares/docs/ares_timeout.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 1998 by the Massachusetts Institute of Technology.
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_TIMEOUT 3 "25 July 1998"
+diff --git a/deps/cares/docs/ares_version.3 b/deps/cares/docs/ares_version.3
+index c85be42bdb..e6a338e341 100644
+--- a/deps/cares/docs/ares_version.3
++++ b/deps/cares/docs/ares_version.3
+@@ -1,5 +1,18 @@
+ .\"
+ .\" Copyright 2004 by Daniel Stenberg
++.\"
++.\" Permission to use, copy, modify, and distribute this
++.\" software and its documentation for any purpose and without
++.\" fee is hereby granted, provided that the above copyright
++.\" notice appear in all copies and that both that copyright
++.\" notice and this permission notice appear in supporting
++.\" documentation, and that the name of M.I.T. not be used in
++.\" advertising or publicity pertaining to distribution of the
++.\" software without specific, written prior permission.
++.\" M.I.T. makes no representations about the suitability of
++.\" this software for any purpose.  It is provided "as is"
++.\" without express or implied warranty.
++.\"
+ .\" SPDX-License-Identifier: MIT
+ .\"
+ .TH ARES_VERSION 3 "29 January 2004"
+diff --git a/deps/cares/include/ares.h b/deps/cares/include/ares.h
+index acbd658307..99c4ec5081 100644
+--- a/deps/cares/include/ares.h
++++ b/deps/cares/include/ares.h
+@@ -109,9 +109,9 @@ extern "C" {
+ #  endif
+ #else
+ #  if defined(__GNUC__) && __GNUC__ >= 4
+-#    define CARES_EXTERN __attribute__((visibility("default")))
++#    define CARES_EXTERN __attribute__ ((visibility ("default")))
+ #  elif defined(__INTEL_COMPILER) && __INTEL_COMPILER >= 900
+-#    define CARES_EXTERN __attribute__((visibility("default")))
++#    define CARES_EXTERN __attribute__ ((visibility ("default")))
+ #  elif defined(__SUNPRO_C)
+ #    define CARES_EXTERN _global
+ #  else
+@@ -161,10 +161,8 @@ typedef enum {
+   ARES_ECANCELLED = 24, /* introduced in 1.7.0 */
+ 
+   /* More ares_getaddrinfo error codes */
+-  ARES_ESERVICE = 25, /* ares_getaddrinfo() was passed a text service name that
+-                       * is not recognized. introduced in 1.16.0 */
+-
+-  ARES_ENOSERVER = 26 /* No DNS servers were configured */
++  ARES_ESERVICE = 25 /* ares_getaddrinfo() was passed a text service name that
++                      * is not recognized. introduced in 1.16.0 */
+ } ares_status_t;
+ 
+ typedef enum {
+@@ -177,15 +175,15 @@ typedef enum {
+   /*! Default (best choice) event system */
+   ARES_EVSYS_DEFAULT = 0,
+   /*! Win32 IOCP/AFD_POLL event system */
+-  ARES_EVSYS_WIN32 = 1,
++  ARES_EVSYS_WIN32   = 1,
+   /*! Linux epoll */
+-  ARES_EVSYS_EPOLL = 2,
++  ARES_EVSYS_EPOLL   = 2,
+   /*! BSD/MacOS kqueue */
+-  ARES_EVSYS_KQUEUE = 3,
++  ARES_EVSYS_KQUEUE  = 3,
+   /*! POSIX poll() */
+-  ARES_EVSYS_POLL = 4,
++  ARES_EVSYS_POLL    = 4,
+   /*! last fallback on Unix-like systems, select() */
+-  ARES_EVSYS_SELECT = 5
++  ARES_EVSYS_SELECT  = 5
+ } ares_evsys_t;
+ 
+ /* Flag values */
+@@ -198,7 +196,6 @@ typedef enum {
+ #define ARES_FLAG_NOALIASES   (1 << 6)
+ #define ARES_FLAG_NOCHECKRESP (1 << 7)
+ #define ARES_FLAG_EDNS        (1 << 8)
+-#define ARES_FLAG_NO_DFLT_SVR (1 << 9)
+ 
+ /* Option mask values */
+ #define ARES_OPT_FLAGS           (1 << 0)
+@@ -336,7 +333,7 @@ struct ares_options {
+   int                udp_max_queries;
+   int                maxtimeout; /* in milliseconds */
+   unsigned int qcache_max_ttl;   /* Maximum TTL for query cache, 0=disabled */
+-  ares_evsys_t evsys;
++  ares_evsys_t       evsys;
+ };
+ 
+ struct hostent;
+@@ -750,54 +747,31 @@ struct ares_addr_port_node {
+ CARES_EXTERN int ares_set_servers(ares_channel_t              *channel,
+                                   const struct ares_addr_node *servers);
+ CARES_EXTERN int
+-                           ares_set_servers_ports(ares_channel_t                   *channel,
+-                                                  const struct ares_addr_port_node *servers);
++                         ares_set_servers_ports(ares_channel_t                   *channel,
++                                                const struct ares_addr_port_node *servers);
+ 
+ /* Incoming string format: host[:port][,host[:port]]... */
+-CARES_EXTERN int           ares_set_servers_csv(ares_channel_t *channel,
+-                                                const char     *servers);
+-CARES_EXTERN int           ares_set_servers_ports_csv(ares_channel_t *channel,
+-                                                      const char     *servers);
+-CARES_EXTERN char         *ares_get_servers_csv(ares_channel_t *channel);
++CARES_EXTERN int         ares_set_servers_csv(ares_channel_t *channel,
++                                              const char     *servers);
++CARES_EXTERN int         ares_set_servers_ports_csv(ares_channel_t *channel,
++                                                    const char     *servers);
++CARES_EXTERN char       *ares_get_servers_csv(ares_channel_t *channel);
+ 
+-CARES_EXTERN int           ares_get_servers(ares_channel_t         *channel,
+-                                            struct ares_addr_node **servers);
+-CARES_EXTERN int           ares_get_servers_ports(ares_channel_t              *channel,
+-                                                  struct ares_addr_port_node **servers);
++CARES_EXTERN int         ares_get_servers(ares_channel_t         *channel,
++                                          struct ares_addr_node **servers);
++CARES_EXTERN int         ares_get_servers_ports(ares_channel_t              *channel,
++                                                struct ares_addr_port_node **servers);
+ 
+-CARES_EXTERN const char   *ares_inet_ntop(int af, const void *src, char *dst,
+-                                          ares_socklen_t size);
++CARES_EXTERN const char *ares_inet_ntop(int af, const void *src, char *dst,
++                                        ares_socklen_t size);
+ 
+-CARES_EXTERN int           ares_inet_pton(int af, const char *src, void *dst);
++CARES_EXTERN int         ares_inet_pton(int af, const char *src, void *dst);
+ 
+ /*! Whether or not the c-ares library was built with threadsafety
+  *
+  *  \return ARES_TRUE if built with threadsafety, ARES_FALSE if not
+  */
+-CARES_EXTERN ares_bool_t   ares_threadsafety(void);
+-
+-
+-/*! Block until notified that there are no longer any queries in queue, or
+- *  the specified timeout has expired.
+- *
+- *  \param[in] channel    Initialized ares channel
+- *  \param[in] timeout_ms Number of milliseconds to wait for the queue to be
+- *                        empty. -1 for Infinite.
+- *  \return ARES_ENOTIMP if not built with threading support, ARES_ETIMEOUT
+- *          if requested timeout expires, ARES_SUCCESS when queue is empty.
+- */
+-CARES_EXTERN ares_status_t ares_queue_wait_empty(ares_channel_t *channel,
+-                                                 int             timeout_ms);
+-
+-
+-/*! Retrieve the total number of active queries pending answers from servers.
+- *  Some c-ares requests may spawn multiple queries, such as ares_getaddrinfo()
+- *  when using AF_UNSPEC, which will be reflected in this number.
+- *
+- *  \param[in] channel Initialized ares channel
+- *  \return Number of active queries to servers
+- */
+-CARES_EXTERN size_t        ares_queue_active_queries(ares_channel_t *channel);
++CARES_EXTERN ares_bool_t ares_threadsafety(void);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/deps/cares/include/ares_dns_record.h b/deps/cares/include/ares_dns_record.h
+index 3f802aefa3..8a6d7781bf 100644
+--- a/deps/cares/include/ares_dns_record.h
++++ b/deps/cares/include/ares_dns_record.h
+@@ -386,18 +386,12 @@ typedef enum {
+ 
+ /*! Data type for flags to ares_dns_parse() */
+ typedef enum {
+-  /*! Parse Answers from RFC 1035 that allow name compression as RAW */
+-  ARES_DNS_PARSE_AN_BASE_RAW = 1 << 0,
+-  /*! Parse Authority from RFC 1035 that allow name compression as RAW */
+-  ARES_DNS_PARSE_NS_BASE_RAW = 1 << 1,
+-  /*! Parse Additional from RFC 1035 that allow name compression as RAW */
+-  ARES_DNS_PARSE_AR_BASE_RAW = 1 << 2,
+-  /*! Parse Answers from later RFCs (no name compression) RAW */
+-  ARES_DNS_PARSE_AN_EXT_RAW  = 1 << 3,
+-  /*! Parse Authority from later RFCs (no name compression) as RAW */
+-  ARES_DNS_PARSE_NS_EXT_RAW  = 1 << 4,
+-  /*< Parse Additional from later RFCs (no name compression) as RAW */
+-  ARES_DNS_PARSE_AR_EXT_RAW  = 1 << 5
++  ARES_DNS_PARSE_AN_BASE_RAW = 1 << 0,  /*!< Parse Answers from RFC 1035 that allow name compression as RAW */
++  ARES_DNS_PARSE_NS_BASE_RAW = 1 << 1,  /*!< Parse Authority from RFC 1035 that allow name compression as RAW */
++  ARES_DNS_PARSE_AR_BASE_RAW = 1 << 2,  /*!< Parse Additional from RFC 1035 that allow name compression as RAW */
++  ARES_DNS_PARSE_AN_EXT_RAW = 1 << 3,  /*!< Parse Answers from later RFCs (no name compression) RAW */
++  ARES_DNS_PARSE_NS_EXT_RAW = 1 << 4,  /*!< Parse Authority from later RFCs (no name compression) as RAW */
++  ARES_DNS_PARSE_AR_EXT_RAW = 1 << 5,  /*!< Parse Additional from later RFCs (no name compression) as RAW */
+ } ares_dns_parse_flags_t;
+ 
+ /*! String representation of DNS Record Type
+diff --git a/deps/cares/include/ares_version.h b/deps/cares/include/ares_version.h
+index 44dbdef161..6768a33e08 100644
+--- a/deps/cares/include/ares_version.h
++++ b/deps/cares/include/ares_version.h
+@@ -31,12 +31,12 @@
+ #define ARES_COPYRIGHT "2004 - 2024 Daniel Stenberg, <daniel@haxx.se>."
+ 
+ #define ARES_VERSION_MAJOR 1
+-#define ARES_VERSION_MINOR 27
++#define ARES_VERSION_MINOR 26
+ #define ARES_VERSION_PATCH 0
+ #define ARES_VERSION                                        \
+   ((ARES_VERSION_MAJOR << 16) | (ARES_VERSION_MINOR << 8) | \
+    (ARES_VERSION_PATCH))
+-#define ARES_VERSION_STR "1.27.0"
++#define ARES_VERSION_STR "1.26.0"
+ 
+ #if (ARES_VERSION >= 0x010700)
+ #  define CARES_HAVE_ARES_LIBRARY_INIT    1
+diff --git a/deps/cares/libcares.pc.in b/deps/cares/libcares.pc.in
+index 36c7c8cf3d..54f6d68bdc 100644
+--- a/deps/cares/libcares.pc.in
++++ b/deps/cares/libcares.pc.in
+@@ -17,6 +17,6 @@ Description: asynchronous DNS lookup library
+ Version: @VERSION@
+ Requires: 
+ Requires.private: 
+-Cflags: -I${includedir} @PKGCONFIG_CFLAGS@
++Cflags: -I${includedir}
+ Libs: -L${libdir} -lcares
+ Libs.private: @CARES_PRIVATE_LIBS@
+diff --git a/deps/cares/src/lib/ares__buf.c b/deps/cares/src/lib/ares__buf.c
+index 8f9f32d718..02b43cb5dc 100644
+--- a/deps/cares/src/lib/ares__buf.c
++++ b/deps/cares/src/lib/ares__buf.c
+@@ -802,7 +802,7 @@ static ares_bool_t ares__buf_split_isduplicate(ares__llist_t       *list,
+ 
+   for (node = ares__llist_node_first(list); node != NULL;
+        node = ares__llist_node_next(node)) {
+-    const ares__buf_t   *buf  = ares__llist_node_val(node);
++    ares__buf_t         *buf  = ares__llist_node_val(node);
+     size_t               plen = 0;
+     const unsigned char *ptr  = ares__buf_peek(buf, &plen);
+ 
+diff --git a/deps/cares/src/lib/ares__htable.c b/deps/cares/src/lib/ares__htable.c
+index 7aaf2d2089..04bd8fdf7f 100644
+--- a/deps/cares/src/lib/ares__htable.c
++++ b/deps/cares/src/lib/ares__htable.c
+@@ -135,24 +135,23 @@ fail:
+   return NULL;
+ }
+ 
++
+ const void **ares__htable_all_buckets(const ares__htable_t *htable, size_t *num)
+ {
+   const void **out = NULL;
+   size_t       cnt = 0;
+   size_t       i;
+ 
+-  if (htable == NULL || num == NULL) {
++  if (htable == NULL || num == NULL)
+     return NULL;
+-  }
+ 
+   *num = 0;
+ 
+   out = ares_malloc_zero(sizeof(*out) * htable->num_keys);
+-  if (out == NULL) {
++  if (out == NULL)
+     return NULL;
+-  }
+ 
+-  for (i = 0; i < htable->size; i++) {
++  for (i=0; i<htable->size; i++) {
+     ares__llist_node_t *node;
+     for (node = ares__llist_node_first(htable->buckets[i]); node != NULL;
+          node = ares__llist_node_next(node)) {
+@@ -164,6 +163,7 @@ const void **ares__htable_all_buckets(const ares__htable_t *htable, size_t *num)
+   return out;
+ }
+ 
++
+ /*! Grabs the Hashtable index from the key and length.  The h index is
+  *  the hash of the function reduced to the size of the bucket list.
+  *  We are doing "hash & (size - 1)" since we are guaranteeing a power of
+diff --git a/deps/cares/src/lib/ares__htable.h b/deps/cares/src/lib/ares__htable.h
+index fd1c0a2366..0e83c24ef7 100644
+--- a/deps/cares/src/lib/ares__htable.h
++++ b/deps/cares/src/lib/ares__htable.h
+@@ -120,8 +120,7 @@ size_t          ares__htable_num_keys(const ares__htable_t *htable);
+  *          will be a dangling pointer.  It is expected wrappers will make
+  *          such values safe by duplicating them.
+  */
+-const void    **ares__htable_all_buckets(const ares__htable_t *htable,
+-                                         size_t               *num);
++const void **ares__htable_all_buckets(const ares__htable_t *htable, size_t *num);
+ 
+ /*! Insert bucket into hashtable
+  *
+diff --git a/deps/cares/src/lib/ares__htable_asvp.c b/deps/cares/src/lib/ares__htable_asvp.c
+index 3c1d2a336f..66c9955f0f 100644
+--- a/deps/cares/src/lib/ares__htable_asvp.c
++++ b/deps/cares/src/lib/ares__htable_asvp.c
+@@ -112,17 +112,15 @@ fail:
+   return NULL;
+ }
+ 
+-ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable,
+-                                      size_t                    *num)
++ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable, size_t *num)
+ {
+   const void   **buckets = NULL;
+   size_t         cnt     = 0;
+   ares_socket_t *out     = NULL;
+   size_t         i;
+ 
+-  if (htable == NULL || num == NULL) {
++  if (htable == NULL || num == NULL)
+     return NULL;
+-  }
+ 
+   *num = 0;
+ 
+@@ -137,7 +135,7 @@ ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable,
+     return NULL;
+   }
+ 
+-  for (i = 0; i < cnt; i++) {
++  for (i=0; i<cnt; i++) {
+     out[i] = ((const ares__htable_asvp_bucket_t *)buckets[i])->key;
+   }
+ 
+@@ -146,6 +144,7 @@ ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable,
+   return out;
+ }
+ 
++
+ ares_bool_t ares__htable_asvp_insert(ares__htable_asvp_t *htable,
+                                      ares_socket_t key, void *val)
+ {
+diff --git a/deps/cares/src/lib/ares__htable_asvp.h b/deps/cares/src/lib/ares__htable_asvp.h
+index ee253455b2..9de81c0993 100644
+--- a/deps/cares/src/lib/ares__htable_asvp.h
++++ b/deps/cares/src/lib/ares__htable_asvp.h
+@@ -65,7 +65,7 @@ void ares__htable_asvp_destroy(ares__htable_asvp_t *htable);
+  *                       NULL it is expected the caller will clean up any user
+  *                       supplied values.
+  */
+-ares__htable_asvp_t              *
++ares__htable_asvp_t           *
+   ares__htable_asvp_create(ares__htable_asvp_val_free_t val_free);
+ 
+ /*! Retrieve an array of keys from the hashtable.
+@@ -74,8 +74,7 @@ ares__htable_asvp_t              *
+  *  \param[out] num_keys Count of returned keys
+  *  \return Array of keys in the hashtable. Must be free'd with ares_free().
+  */
+-ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable,
+-                                      size_t                    *num);
++ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable, size_t *num);
+ 
+ 
+ /*! Insert key/value into hash table
+@@ -85,8 +84,8 @@ ares_socket_t *ares__htable_asvp_keys(const ares__htable_asvp_t *htable,
+  *  \param[in] val    value to store (takes ownership). May be NULL.
+  *  \return ARES_TRUE on success, ARES_FALSE on out of memory or misuse
+  */
+-ares_bool_t    ares__htable_asvp_insert(ares__htable_asvp_t *htable,
+-                                        ares_socket_t key, void *val);
++ares_bool_t ares__htable_asvp_insert(ares__htable_asvp_t *htable,
++                                     ares_socket_t key, void *val);
+ 
+ /*! Retrieve value from hashtable based on key
+  *
+@@ -95,8 +94,8 @@ ares_bool_t    ares__htable_asvp_insert(ares__htable_asvp_t *htable,
+  *  \param[out] val     Optional.  Pointer to store value.
+  *  \return ARES_TRUE on success, ARES_FALSE on failure
+  */
+-ares_bool_t    ares__htable_asvp_get(const ares__htable_asvp_t *htable,
+-                                     ares_socket_t key, void **val);
++ares_bool_t ares__htable_asvp_get(const ares__htable_asvp_t *htable,
++                                  ares_socket_t key, void **val);
+ 
+ /*! Retrieve value from hashtable directly as return value.  Caveat to this
+  *  function over ares__htable_asvp_get() is that if a NULL value is stored
+@@ -106,8 +105,8 @@ ares_bool_t    ares__htable_asvp_get(const ares__htable_asvp_t *htable,
+  *  \param[in] key     key to use to search
+  *  \return value associated with key in hashtable or NULL
+  */
+-void          *ares__htable_asvp_get_direct(const ares__htable_asvp_t *htable,
+-                                            ares_socket_t              key);
++void       *ares__htable_asvp_get_direct(const ares__htable_asvp_t *htable,
++                                         ares_socket_t              key);
+ 
+ /*! Remove a value from the hashtable by key
+  *
+@@ -115,15 +114,15 @@ void          *ares__htable_asvp_get_direct(const ares__htable_asvp_t *htable,
+  *  \param[in] key     key to use to search
+  *  \return ARES_TRUE if found, ARES_FALSE if not found
+  */
+-ares_bool_t    ares__htable_asvp_remove(ares__htable_asvp_t *htable,
+-                                        ares_socket_t        key);
++ares_bool_t ares__htable_asvp_remove(ares__htable_asvp_t *htable,
++                                     ares_socket_t        key);
+ 
+ /*! Retrieve the number of keys stored in the hash table
+  *
+  *  \param[in] htable  Initialized hash table
+  *  \return count
+  */
+-size_t         ares__htable_asvp_num_keys(const ares__htable_asvp_t *htable);
++size_t      ares__htable_asvp_num_keys(const ares__htable_asvp_t *htable);
+ 
+ /*! @} */
+ 
+diff --git a/deps/cares/src/lib/ares__read_line.c b/deps/cares/src/lib/ares__read_line.c
+index 018f55e8b2..d65ac1fcf8 100644
+--- a/deps/cares/src/lib/ares__read_line.c
++++ b/deps/cares/src/lib/ares__read_line.c
+@@ -59,14 +59,6 @@ ares_status_t ares__read_line(FILE *fp, char **buf, size_t *bufsize)
+       return (offset != 0) ? 0 : (ferror(fp)) ? ARES_EFILE : ARES_EOF;
+     }
+     len = offset + ares_strlen(*buf + offset);
+-
+-    /* Probably means there was an embedded NULL as the first character in
+-     * the line, throw away line */
+-    if (len == 0) {
+-      offset = 0;
+-      continue;
+-    }
+-
+     if ((*buf)[len - 1] == '\n') {
+       (*buf)[len - 1] = 0;
+       break;
+diff --git a/deps/cares/src/lib/ares__socket.c b/deps/cares/src/lib/ares__socket.c
+index da03755a50..ec6b745cbf 100644
+--- a/deps/cares/src/lib/ares__socket.c
++++ b/deps/cares/src/lib/ares__socket.c
+@@ -450,9 +450,8 @@ ares_ssize_t ares__socket_write(ares_channel_t *channel, ares_socket_t s,
+ void ares_set_socket_callback(ares_channel_t           *channel,
+                               ares_sock_create_callback cb, void *data)
+ {
+-  if (channel == NULL) {
++  if (channel == NULL)
+     return;
+-  }
+   channel->sock_create_cb      = cb;
+   channel->sock_create_cb_data = data;
+ }
+@@ -461,9 +460,8 @@ void ares_set_socket_configure_callback(ares_channel_t           *channel,
+                                         ares_sock_config_callback cb,
+                                         void                     *data)
+ {
+-  if (channel == NULL || channel->optmask & ARES_OPT_EVENT_THREAD) {
++  if (channel == NULL || channel->optmask & ARES_OPT_EVENT_THREAD)
+     return;
+-  }
+   channel->sock_config_cb      = cb;
+   channel->sock_config_cb_data = data;
+ }
+@@ -472,9 +470,8 @@ void ares_set_socket_functions(ares_channel_t                     *channel,
+                                const struct ares_socket_functions *funcs,
+                                void                               *data)
+ {
+-  if (channel == NULL || channel->optmask & ARES_OPT_EVENT_THREAD) {
++  if (channel == NULL || channel->optmask & ARES_OPT_EVENT_THREAD)
+     return;
+-  }
+   channel->sock_funcs        = funcs;
+   channel->sock_func_cb_data = data;
+ }
+diff --git a/deps/cares/src/lib/ares__threads.c b/deps/cares/src/lib/ares__threads.c
+index 028790aead..d5182535b2 100644
+--- a/deps/cares/src/lib/ares__threads.c
++++ b/deps/cares/src/lib/ares__threads.c
+@@ -70,77 +70,13 @@ void ares__thread_mutex_unlock(ares__thread_mutex_t *mut)
+   LeaveCriticalSection(&mut->mutex);
+ }
+ 
+-struct ares__thread_cond {
+-  CONDITION_VARIABLE cond;
+-};
+-
+-ares__thread_cond_t *ares__thread_cond_create(void)
+-{
+-  ares__thread_cond_t *cond = ares_malloc_zero(sizeof(*cond));
+-  if (cond == NULL) {
+-    return NULL;
+-  }
+-  InitializeConditionVariable(&cond->cond);
+-  return cond;
+-}
+-
+-void ares__thread_cond_destroy(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  ares_free(cond);
+-}
+-
+-void ares__thread_cond_signal(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  WakeConditionVariable(&cond->cond);
+-}
+-
+-void ares__thread_cond_broadcast(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  WakeAllConditionVariable(&cond->cond);
+-}
+-
+-ares_status_t ares__thread_cond_wait(ares__thread_cond_t  *cond,
+-                                     ares__thread_mutex_t *mut)
+-{
+-  if (cond == NULL || mut == NULL) {
+-    return ARES_EFORMERR;
+-  }
+-
+-  SleepConditionVariableCS(&cond->cond, &mut->mutex, INFINITE);
+-  return ARES_SUCCESS;
+-}
+-
+-ares_status_t ares__thread_cond_timedwait(ares__thread_cond_t  *cond,
+-                                          ares__thread_mutex_t *mut,
+-                                          unsigned long         timeout_ms)
+-{
+-  if (cond == NULL || mut == NULL) {
+-    return ARES_EFORMERR;
+-  }
+-
+-  if (!SleepConditionVariableCS(&cond->cond, &mut->mutex, timeout_ms)) {
+-    return ARES_ETIMEOUT;
+-  }
+-
+-  return ARES_SUCCESS;
+-}
+-
+ struct ares__thread {
+   HANDLE thread;
+   DWORD  id;
+ 
+-  void  *(*func)(void *arg);
+-  void  *arg;
+-  void  *rv;
++  void *(*func)(void *arg);
++  void   *arg;
++  void   *rv;
+ };
+ 
+ /* Wrap for pthread compatibility */
+@@ -203,16 +139,6 @@ ares_status_t ares__thread_join(ares__thread_t *thread, void **rv)
+ #  else /* !WIN32 == PTHREAD */
+ #    include <pthread.h>
+ 
+-/* for clock_gettime() */
+-#    ifdef HAVE_TIME_H
+-#      include <time.h>
+-#    endif
+-
+-/* for gettimeofday() */
+-#    ifdef HAVE_SYS_TIME_H
+-#      include <sys/time.h>
+-#    endif
+-
+ struct ares__thread_mutex {
+   pthread_mutex_t mutex;
+ };
+@@ -272,98 +198,6 @@ void ares__thread_mutex_unlock(ares__thread_mutex_t *mut)
+   pthread_mutex_unlock(&mut->mutex);
+ }
+ 
+-struct ares__thread_cond {
+-  pthread_cond_t cond;
+-};
+-
+-ares__thread_cond_t *ares__thread_cond_create(void)
+-{
+-  ares__thread_cond_t *cond = ares_malloc_zero(sizeof(*cond));
+-  if (cond == NULL) {
+-    return NULL;
+-  }
+-  pthread_cond_init(&cond->cond, NULL);
+-  return cond;
+-}
+-
+-void ares__thread_cond_destroy(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  pthread_cond_destroy(&cond->cond);
+-  ares_free(cond);
+-}
+-
+-void ares__thread_cond_signal(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  pthread_cond_signal(&cond->cond);
+-}
+-
+-void ares__thread_cond_broadcast(ares__thread_cond_t *cond)
+-{
+-  if (cond == NULL) {
+-    return;
+-  }
+-  pthread_cond_broadcast(&cond->cond);
+-}
+-
+-ares_status_t ares__thread_cond_wait(ares__thread_cond_t  *cond,
+-                                     ares__thread_mutex_t *mut)
+-{
+-  if (cond == NULL || mut == NULL) {
+-    return ARES_EFORMERR;
+-  }
+-
+-  pthread_cond_wait(&cond->cond, &mut->mutex);
+-  return ARES_SUCCESS;
+-}
+-
+-static void ares__timespec_timeout(struct timespec *ts, unsigned long add_ms)
+-{
+-#    if defined(HAVE_CLOCK_GETTIME) && defined(CLOCK_REALTIME)
+-  clock_gettime(CLOCK_REALTIME, ts);
+-#    elif defined(HAVE_GETTIMEOFDAY)
+-  struct timeval tv;
+-  gettimeofday(&tv, NULL);
+-  ts->tv_sec  = tv.tv_sec;
+-  ts->tv_nsec = tv.tv_usec * 1000;
+-#    else
+-#      error cannot determine current system time
+-#    endif
+-
+-  ts->tv_sec  += add_ms / 1000;
+-  ts->tv_nsec += (add_ms % 1000) * 1000000;
+-
+-  /* Normalize if needed */
+-  if (ts->tv_nsec >= 1000000000) {
+-    ts->tv_sec  += ts->tv_nsec / 1000000000;
+-    ts->tv_nsec %= 1000000000;
+-  }
+-}
+-
+-ares_status_t ares__thread_cond_timedwait(ares__thread_cond_t  *cond,
+-                                          ares__thread_mutex_t *mut,
+-                                          unsigned long         timeout_ms)
+-{
+-  struct timespec ts;
+-
+-  if (cond == NULL || mut == NULL) {
+-    return ARES_EFORMERR;
+-  }
+-
+-  ares__timespec_timeout(&ts, timeout_ms);
+-
+-  if (pthread_cond_timedwait(&cond->cond, &mut->mutex, &ts) != 0) {
+-    return ARES_ETIMEOUT;
+-  }
+-
+-  return ARES_SUCCESS;
+-}
+-
+ struct ares__thread {
+   pthread_t thread;
+ };
+@@ -440,44 +274,6 @@ void ares__thread_mutex_unlock(ares__thread_mutex_t *mut)
+   (void)mut;
+ }
+ 
+-ares__thread_cond_t *ares__thread_cond_create(void)
+-{
+-  return NULL;
+-}
+-
+-void ares__thread_cond_destroy(ares__thread_cond_t *cond)
+-{
+-  (void)cond;
+-}
+-
+-void ares__thread_cond_signal(ares__thread_cond_t *cond)
+-{
+-  (void)cond;
+-}
+-
+-void ares__thread_cond_broadcast(ares__thread_cond_t *cond)
+-{
+-  (void)cond;
+-}
+-
+-ares_status_t ares__thread_cond_wait(ares__thread_cond_t  *cond,
+-                                     ares__thread_mutex_t *mut)
+-{
+-  (void)cond;
+-  (void)mut;
+-  return ARES_ENOTIMP;
+-}
+-
+-ares_status_t ares__thread_cond_timedwait(ares__thread_cond_t  *cond,
+-                                          ares__thread_mutex_t *mut,
+-                                          unsigned long         timeout_ms)
+-{
+-  (void)cond;
+-  (void)mut;
+-  (void)timeout_ms;
+-  return ARES_ENOTIMP;
+-}
+-
+ ares_status_t ares__thread_create(ares__thread_t    **thread,
+                                   ares__thread_func_t func, void *arg)
+ {
+@@ -503,38 +299,21 @@ ares_bool_t ares_threadsafety(void)
+ 
+ ares_status_t ares__channel_threading_init(ares_channel_t *channel)
+ {
+-  ares_status_t status = ARES_SUCCESS;
+-
+-  /* Threading is optional! */
+   if (!ares_threadsafety()) {
+-    return ARES_SUCCESS;
++    return ARES_ENOTIMP;
+   }
+ 
+   channel->lock = ares__thread_mutex_create();
+   if (channel->lock == NULL) {
+-    status = ARES_ENOMEM;
+-    goto done;
+-  }
+-
+-  channel->cond_empty = ares__thread_cond_create();
+-  if (channel->cond_empty == NULL) {
+-    status = ARES_ENOMEM;
+-    goto done;
+-  }
+-
+-done:
+-  if (status != ARES_SUCCESS) {
+-    ares__channel_threading_destroy(channel);
++    return ARES_ENOMEM;
+   }
+-  return status;
++  return ARES_SUCCESS;
+ }
+ 
+ void ares__channel_threading_destroy(ares_channel_t *channel)
+ {
+   ares__thread_mutex_destroy(channel->lock);
+   channel->lock = NULL;
+-  ares__thread_cond_destroy(channel->cond_empty);
+-  channel->cond_empty = NULL;
+ }
+ 
+ void ares__channel_lock(ares_channel_t *channel)
+@@ -546,62 +325,3 @@ void ares__channel_unlock(ares_channel_t *channel)
+ {
+   ares__thread_mutex_unlock(channel->lock);
+ }
+-
+-/* Must not be holding a channel lock already, public function only */
+-ares_status_t ares_queue_wait_empty(ares_channel_t *channel, int timeout_ms)
+-{
+-  ares_status_t  status = ARES_SUCCESS;
+-  struct timeval tout;
+-
+-  if (!ares_threadsafety()) {
+-    return ARES_ENOTIMP;
+-  }
+-
+-  if (channel == NULL) {
+-    return ARES_EFORMERR;
+-  }
+-
+-  if (timeout_ms >= 0) {
+-    tout          = ares__tvnow();
+-    tout.tv_sec  += timeout_ms / 1000;
+-    tout.tv_usec += (timeout_ms % 1000) * 1000;
+-  }
+-
+-  ares__thread_mutex_lock(channel->lock);
+-  while (ares__llist_len(channel->all_queries)) {
+-    if (timeout_ms < 0) {
+-      ares__thread_cond_wait(channel->cond_empty, channel->lock);
+-    } else {
+-      struct timeval tv_remaining;
+-      struct timeval tv_now = ares__tvnow();
+-      unsigned long  tms;
+-
+-      ares__timeval_remaining(&tv_remaining, &tv_now, &tout);
+-      tms = (unsigned long)((tv_remaining.tv_sec * 1000) +
+-                            (tv_remaining.tv_usec / 1000));
+-      if (tms == 0) {
+-        status = ARES_ETIMEOUT;
+-      } else {
+-        status =
+-          ares__thread_cond_timedwait(channel->cond_empty, channel->lock, tms);
+-      }
+-    }
+-  }
+-  ares__thread_mutex_unlock(channel->lock);
+-  return status;
+-}
+-
+-void ares_queue_notify_empty(ares_channel_t *channel)
+-{
+-  if (channel == NULL) {
+-    return;
+-  }
+-
+-  /* We are guaranteed to be holding a channel lock already */
+-  if (ares__llist_len(channel->all_queries)) {
+-    return;
+-  }
+-
+-  /* Notify all waiters of the conditional */
+-  ares__thread_cond_broadcast(channel->cond_empty);
+-}
+diff --git a/deps/cares/src/lib/ares__threads.h b/deps/cares/src/lib/ares__threads.h
+index 3976429647..03f67f08e6 100644
+--- a/deps/cares/src/lib/ares__threads.h
++++ b/deps/cares/src/lib/ares__threads.h
+@@ -34,21 +34,6 @@ void ares__thread_mutex_destroy(ares__thread_mutex_t *mut);
+ void ares__thread_mutex_lock(ares__thread_mutex_t *mut);
+ void ares__thread_mutex_unlock(ares__thread_mutex_t *mut);
+ 
+-
+-struct ares__thread_cond;
+-typedef struct ares__thread_cond ares__thread_cond_t;
+-
+-ares__thread_cond_t             *ares__thread_cond_create(void);
+-void          ares__thread_cond_destroy(ares__thread_cond_t *cond);
+-void          ares__thread_cond_signal(ares__thread_cond_t *cond);
+-void          ares__thread_cond_broadcast(ares__thread_cond_t *cond);
+-ares_status_t ares__thread_cond_wait(ares__thread_cond_t  *cond,
+-                                     ares__thread_mutex_t *mut);
+-ares_status_t ares__thread_cond_timedwait(ares__thread_cond_t  *cond,
+-                                          ares__thread_mutex_t *mut,
+-                                          unsigned long         timeout_ms);
+-
+-
+ struct ares__thread;
+ typedef struct ares__thread ares__thread_t;
+ 
+diff --git a/deps/cares/src/lib/ares_cancel.c b/deps/cares/src/lib/ares_cancel.c
+index 0ee6124dd7..9841f9bf64 100644
+--- a/deps/cares/src/lib/ares_cancel.c
++++ b/deps/cares/src/lib/ares_cancel.c
+@@ -85,9 +85,6 @@ void ares_cancel(ares_channel_t *channel)
+ 
+     ares__llist_destroy(list_copy);
+   }
+-
+-  ares_queue_notify_empty(channel);
+-
+ done:
+   ares__channel_unlock(channel);
+ }
+diff --git a/deps/cares/src/lib/ares_destroy.c b/deps/cares/src/lib/ares_destroy.c
+index 145084577f..f2f0d9a7a8 100644
+--- a/deps/cares/src/lib/ares_destroy.c
++++ b/deps/cares/src/lib/ares_destroy.c
+@@ -57,8 +57,6 @@ void ares_destroy(ares_channel_t *channel)
+     node = next;
+   }
+ 
+-  ares_queue_notify_empty(channel);
+-
+ #ifndef NDEBUG
+   /* Freeing the query should remove it from all the lists in which it sits,
+    * so all query lists should be empty now.
+diff --git a/deps/cares/src/lib/ares_dns_parse.c b/deps/cares/src/lib/ares_dns_parse.c
+index 169fd5b63d..a201529165 100644
+--- a/deps/cares/src/lib/ares_dns_parse.c
++++ b/deps/cares/src/lib/ares_dns_parse.c
+@@ -1067,19 +1067,13 @@ static ares_status_t ares_dns_parse_rr(ares__buf_t *buf, unsigned int flags,
+   }
+ 
+   namecomp = ares_dns_rec_type_allow_name_compression(type);
+-  if (sect == ARES_SECTION_ANSWER &&
+-      (flags &
+-       (namecomp ? ARES_DNS_PARSE_AN_BASE_RAW : ARES_DNS_PARSE_AN_EXT_RAW))) {
++  if (sect == ARES_SECTION_ANSWER && (flags & (namecomp ? ARES_DNS_PARSE_AN_BASE_RAW : ARES_DNS_PARSE_AN_EXT_RAW))) {
+     type = ARES_REC_TYPE_RAW_RR;
+   }
+-  if (sect == ARES_SECTION_AUTHORITY &&
+-      (flags &
+-       (namecomp ? ARES_DNS_PARSE_NS_BASE_RAW : ARES_DNS_PARSE_NS_EXT_RAW))) {
++  if (sect == ARES_SECTION_AUTHORITY && (flags & (namecomp ? ARES_DNS_PARSE_NS_BASE_RAW : ARES_DNS_PARSE_NS_EXT_RAW))) {
+     type = ARES_REC_TYPE_RAW_RR;
+   }
+-  if (sect == ARES_SECTION_ADDITIONAL &&
+-      (flags &
+-       (namecomp ? ARES_DNS_PARSE_AR_BASE_RAW : ARES_DNS_PARSE_AR_EXT_RAW))) {
++  if (sect == ARES_SECTION_ADDITIONAL && (flags & (namecomp ? ARES_DNS_PARSE_AR_BASE_RAW : ARES_DNS_PARSE_AR_EXT_RAW))) {
+     type = ARES_REC_TYPE_RAW_RR;
+   }
+ 
+diff --git a/deps/cares/src/lib/ares_event_epoll.c b/deps/cares/src/lib/ares_event_epoll.c
+index 9d3c097f8e..3c9ccbbb75 100644
+--- a/deps/cares/src/lib/ares_event_epoll.c
++++ b/deps/cares/src/lib/ares_event_epoll.c
+@@ -94,9 +94,9 @@ static ares_bool_t ares_evsys_epoll_init(ares_event_thread_t *e)
+ 
+ static ares_bool_t ares_evsys_epoll_event_add(ares_event_t *event)
+ {
+-  const ares_event_thread_t *e  = event->e;
+-  const ares_evsys_epoll_t  *ep = e->ev_sys_data;
+-  struct epoll_event         epev;
++  ares_event_thread_t *e  = event->e;
++  ares_evsys_epoll_t  *ep = e->ev_sys_data;
++  struct epoll_event   epev;
+ 
+   memset(&epev, 0, sizeof(epev));
+   epev.data.fd = event->fd;
+@@ -115,9 +115,9 @@ static ares_bool_t ares_evsys_epoll_event_add(ares_event_t *event)
+ 
+ static void ares_evsys_epoll_event_del(ares_event_t *event)
+ {
+-  const ares_event_thread_t *e  = event->e;
+-  const ares_evsys_epoll_t  *ep = e->ev_sys_data;
+-  struct epoll_event         epev;
++  ares_event_thread_t *e  = event->e;
++  ares_evsys_epoll_t  *ep = e->ev_sys_data;
++  struct epoll_event   epev;
+ 
+   memset(&epev, 0, sizeof(epev));
+   epev.data.fd = event->fd;
+@@ -127,9 +127,9 @@ static void ares_evsys_epoll_event_del(ares_event_t *event)
+ static void ares_evsys_epoll_event_mod(ares_event_t      *event,
+                                        ares_event_flags_t new_flags)
+ {
+-  const ares_event_thread_t *e  = event->e;
+-  const ares_evsys_epoll_t  *ep = e->ev_sys_data;
+-  struct epoll_event         epev;
++  ares_event_thread_t *e  = event->e;
++  ares_evsys_epoll_t  *ep = e->ev_sys_data;
++  struct epoll_event   epev;
+ 
+   memset(&epev, 0, sizeof(epev));
+   epev.data.fd = event->fd;
+@@ -146,12 +146,12 @@ static void ares_evsys_epoll_event_mod(ares_event_t      *event,
+ static size_t ares_evsys_epoll_wait(ares_event_thread_t *e,
+                                     unsigned long        timeout_ms)
+ {
+-  struct epoll_event        events[8];
+-  size_t                    nevents = sizeof(events) / sizeof(*events);
+-  const ares_evsys_epoll_t *ep      = e->ev_sys_data;
+-  int                       rv;
+-  size_t                    i;
+-  size_t                    cnt = 0;
++  struct epoll_event  events[8];
++  size_t              nevents = sizeof(events) / sizeof(*events);
++  ares_evsys_epoll_t *ep      = e->ev_sys_data;
++  int                 rv;
++  size_t              i;
++  size_t              cnt = 0;
+ 
+   memset(events, 0, sizeof(events));
+ 
+diff --git a/deps/cares/src/lib/ares_event_poll.c b/deps/cares/src/lib/ares_event_poll.c
+index c16b282466..e2b1db12b4 100644
+--- a/deps/cares/src/lib/ares_event_poll.c
++++ b/deps/cares/src/lib/ares_event_poll.c
+@@ -78,9 +78,8 @@ static size_t ares_evsys_poll_wait(ares_event_thread_t *e,
+   if (num_fds) {
+     pollfd = ares_malloc_zero(sizeof(*pollfd) * num_fds);
+     for (i = 0; i < num_fds; i++) {
+-      const ares_event_t *ev =
+-        ares__htable_asvp_get_direct(e->ev_handles, fdlist[i]);
+-      pollfd[i].fd = ev->fd;
++      ares_event_t *ev = ares__htable_asvp_get_direct(e->ev_handles, fdlist[i]);
++      pollfd[i].fd     = ev->fd;
+       if (ev->flags & ARES_EVENT_FLAG_READ) {
+         pollfd[i].events |= POLLIN;
+       }
+diff --git a/deps/cares/src/lib/ares_event_select.c b/deps/cares/src/lib/ares_event_select.c
+index 4823e808f1..b73ac74716 100644
+--- a/deps/cares/src/lib/ares_event_select.c
++++ b/deps/cares/src/lib/ares_event_select.c
+@@ -85,8 +85,7 @@ static size_t ares_evsys_select_wait(ares_event_thread_t *e,
+   FD_ZERO(&write_fds);
+ 
+   for (i = 0; i < num_fds; i++) {
+-    const ares_event_t *ev =
+-      ares__htable_asvp_get_direct(e->ev_handles, fdlist[i]);
++    ares_event_t *ev = ares__htable_asvp_get_direct(e->ev_handles, fdlist[i]);
+     if (ev->flags & ARES_EVENT_FLAG_READ) {
+       FD_SET(ev->fd, &read_fds);
+     }
+diff --git a/deps/cares/src/lib/ares_event_thread.c b/deps/cares/src/lib/ares_event_thread.c
+index 6dd7b502a3..6a69c8e4d7 100644
+--- a/deps/cares/src/lib/ares_event_thread.c
++++ b/deps/cares/src/lib/ares_event_thread.c
+@@ -37,7 +37,7 @@ static void ares_event_destroy_cb(void *arg)
+ 
+   /* Unregister from the event thread if it was registered with one */
+   if (event->e) {
+-    const ares_event_thread_t *e = event->e;
++    ares_event_thread_t *e = event->e;
+     e->ev_sys->event_del(event);
+     event->e = NULL;
+   }
+@@ -52,15 +52,9 @@ static void ares_event_destroy_cb(void *arg)
+ /* See if a pending update already exists. We don't want to enqueue multiple
+  * updates for the same event handle. Right now this is O(n) based on number
+  * of updates already enqueued.  In the future, it might make sense to make
+- * this O(1) with a hashtable.
+- * NOTE: in some cases a delete then re-add of the same fd, but really pointing
+- *       to a different destination can happen due to a quick close of a
+- *       connection then creation of a new one.  So we need to look at the
+- *       flags and ignore any delete events when finding a match since we
+- *       need to process the delete always, it can't be combined with other
+- *       updates. */
++ * this O(1) with a hashtable. */
+ static ares_event_t *ares_event_update_find(ares_event_thread_t *e,
+-                                            ares_socket_t fd, const void *data)
++                                            ares_socket_t fd, void *data)
+ {
+   ares__llist_node_t *node;
+ 
+@@ -68,12 +62,12 @@ static ares_event_t *ares_event_update_find(ares_event_thread_t *e,
+        node = ares__llist_node_next(node)) {
+     ares_event_t *ev = ares__llist_node_val(node);
+ 
+-    if (fd != ARES_SOCKET_BAD && fd == ev->fd && ev->flags != 0) {
++    if (fd != ARES_SOCKET_BAD && fd == ev->fd) {
+       return ev;
+     }
+ 
+     if (fd == ARES_SOCKET_BAD && ev->fd == ARES_SOCKET_BAD &&
+-        data == ev->data && ev->flags != 0) {
++        data == ev->data) {
+       return ev;
+     }
+   }
+@@ -158,7 +152,7 @@ static void ares_event_signal(const ares_event_t *event)
+   event->signal_cb(event);
+ }
+ 
+-static void ares_event_thread_wake(const ares_event_thread_t *e)
++static void ares_event_thread_wake(ares_event_thread_t *e)
+ {
+   if (e == NULL) {
+     return;
+@@ -194,6 +188,7 @@ static void ares_event_thread_sockstate_cb(void *data, ares_socket_t socket_fd,
+ 
+   /* Update channel fd */
+   ares__thread_mutex_lock(e->mutex);
++
+   ares_event_update(NULL, e, flags, ares_event_thread_process_fd, socket_fd,
+                     NULL, NULL, NULL);
+ 
+@@ -252,9 +247,9 @@ static void *ares_event_thread(void *arg)
+   ares__thread_mutex_lock(e->mutex);
+ 
+   while (e->isup) {
+-    struct timeval        tv;
+-    const struct timeval *tvout;
+-    unsigned long         timeout_ms = 0; /* 0 = unlimited */
++    struct timeval  tv;
++    struct timeval *tvout;
++    unsigned long   timeout_ms = 0; /* 0 = unlimited */
+ 
+     tvout = ares_timeout(e->channel, NULL, &tv);
+     if (tvout != NULL) {
+@@ -368,7 +363,7 @@ static const ares_event_sys_t *ares_event_fetch_sys(ares_evsys_t evsys)
+       return NULL;
+ #endif
+ 
+-    /* case ARES_EVSYS_DEFAULT: */
++    case ARES_EVSYS_DEFAULT:
+     default:
+ #if defined(_WIN32)
+       return &ares_evsys_win32;
+diff --git a/deps/cares/src/lib/ares_event_wake_pipe.c b/deps/cares/src/lib/ares_event_wake_pipe.c
+index a2cd6f609a..eca7539a02 100644
+--- a/deps/cares/src/lib/ares_event_wake_pipe.c
++++ b/deps/cares/src/lib/ares_event_wake_pipe.c
+@@ -110,21 +110,21 @@ static ares_pipeevent_t *ares_pipeevent_init(void)
+ 
+ static void ares_pipeevent_signal(const ares_event_t *e)
+ {
+-  const ares_pipeevent_t *p;
++  ares_pipeevent_t *p;
+ 
+   if (e == NULL || e->data == NULL) {
+     return;
+   }
+ 
+   p = e->data;
+-  (void)write(p->filedes[1], "1", 1);
++  write(p->filedes[1], "1", 1);
+ }
+ 
+ static void ares_pipeevent_cb(ares_event_thread_t *e, ares_socket_t fd,
+                               void *data, ares_event_flags_t flags)
+ {
+-  unsigned char           buf[32];
+-  const ares_pipeevent_t *p = NULL;
++  unsigned char     buf[32];
++  ares_pipeevent_t *p = NULL;
+ 
+   (void)e;
+   (void)fd;
+diff --git a/deps/cares/src/lib/ares_getnameinfo.c b/deps/cares/src/lib/ares_getnameinfo.c
+index 8889e9eec6..7a9c0d555f 100644
+--- a/deps/cares/src/lib/ares_getnameinfo.c
++++ b/deps/cares/src/lib/ares_getnameinfo.c
+@@ -86,10 +86,10 @@ static void append_scopeid(const struct sockaddr_in6 *addr6,
+ #endif
+ static char *ares_striendstr(const char *s1, const char *s2);
+ 
+-static void  ares_getnameinfo_int(ares_channel_t        *channel,
+-                                  const struct sockaddr *sa,
+-                                  ares_socklen_t salen, int flags_int,
+-                                  ares_nameinfo_callback callback, void *arg)
++static void           ares_getnameinfo_int(ares_channel_t        *channel,
++                                           const struct sockaddr *sa,
++                                           ares_socklen_t salen, int flags_int,
++                                           ares_nameinfo_callback callback, void *arg)
+ {
+   const struct sockaddr_in  *addr  = NULL;
+   const struct sockaddr_in6 *addr6 = NULL;
+diff --git a/deps/cares/src/lib/ares_init.c b/deps/cares/src/lib/ares_init.c
+index bae7c72fe2..014226f392 100644
+--- a/deps/cares/src/lib/ares_init.c
++++ b/deps/cares/src/lib/ares_init.c
+@@ -133,8 +133,6 @@ static ares_status_t init_by_defaults(ares_channel_t *channel)
+ #ifdef HAVE_GETHOSTNAME
+   const char *dot;
+ #endif
+-  struct ares_addr addr;
+-  ares__llist_t   *sconfig = NULL;
+ 
+   /* Enable EDNS by default */
+   if (!(channel->optmask & ARES_OPT_FLAGS)) {
+@@ -157,27 +155,22 @@ static ares_status_t init_by_defaults(ares_channel_t *channel)
+   }
+ 
+   if (ares__slist_len(channel->servers) == 0) {
+-    /* Add a default local named server to the channel unless configured not
+-     * to (in which case return an error).
+-     */
+-    if (channel->flags & ARES_FLAG_NO_DFLT_SVR) {
+-      rc = ARES_ENOSERVER;
+-      goto error;
+-    }
++    struct ares_addr addr;
++    ares__llist_t   *sconfig = NULL;
+ 
+     addr.family            = AF_INET;
+     addr.addr.addr4.s_addr = htonl(INADDR_LOOPBACK);
+ 
+     rc = ares__sconfig_append(&sconfig, &addr, 0, 0, NULL);
+     if (rc != ARES_SUCCESS) {
+-      goto error;
++      return rc;
+     }
+ 
+     rc = ares__servers_update(channel, sconfig, ARES_FALSE);
+     ares__llist_destroy(sconfig);
+ 
+     if (rc != ARES_SUCCESS) {
+-      goto error;
++      return rc;
+     }
+   }
+ 
+@@ -394,7 +387,6 @@ int ares_init_options(ares_channel_t           **channelptr,
+   if (status != ARES_SUCCESS) {
+     DEBUGF(fprintf(stderr, "Error: init_by_defaults failed: %s\n",
+                    ares_strerror(status)));
+-    goto done;
+   }
+ 
+   /* Initialize the event thread */
+diff --git a/deps/cares/src/lib/ares_options.c b/deps/cares/src/lib/ares_options.c
+index 342d2ea1be..59e3aa7ab9 100644
+--- a/deps/cares/src/lib/ares_options.c
++++ b/deps/cares/src/lib/ares_options.c
+@@ -275,12 +275,10 @@ ares_status_t ares__init_by_options(ares_channel_t            *channel,
+   /* Event Thread requires threading support and is incompatible with socket
+    * state callbacks */
+   if (optmask & ARES_OPT_EVENT_THREAD) {
+-    if (!ares_threadsafety()) {
++    if (!ares_threadsafety())
+       return ARES_ENOTIMP;
+-    }
+-    if (optmask & ARES_OPT_SOCK_STATE_CB) {
++    if (optmask & ARES_OPT_SOCK_STATE_CB)
+       return ARES_EFORMERR;
+-    }
+     channel->evsys = options->evsys;
+   }
+ 
+diff --git a/deps/cares/src/lib/ares_private.h b/deps/cares/src/lib/ares_private.h
+index fd321b911c..53c8d532a4 100644
+--- a/deps/cares/src/lib/ares_private.h
++++ b/deps/cares/src/lib/ares_private.h
+@@ -138,9 +138,9 @@ typedef struct ares_rand_state ares_rand_state;
+ #endif
+ 
+ /********* EDNS defines section ******/
+-#define EDNSPACKETSZ                                          \
+-  1232 /* Reasonable UDP payload size, as agreed by operators \
+-          https://www.dnsflagday.net/2020/#faq */
++#define EDNSPACKETSZ                                                  \
++  1280                   /* Reasonable UDP payload size, as suggested \
++                            in RFC2671 */
+ #define MAXENDSSZ   4096 /* Maximum (local) limit for edns packet size */
+ #define EDNSFIXEDSZ 11   /* Size of EDNS header */
+ 
+@@ -264,9 +264,6 @@ struct ares_channeldata {
+   /* Thread safety lock */
+   ares__thread_mutex_t *lock;
+ 
+-  /* Conditional to wake waiters when queue is empty */
+-  ares__thread_cond_t  *cond_empty;
+-
+   /* Server addresses and communications state. Sorted by least consecutive
+    * failures, followed by the configuration order if failures are equal. */
+   ares__slist_t        *servers;
+@@ -535,16 +532,6 @@ ares_status_t ares__dns_name_write(ares__buf_t *buf, ares__llist_t **list,
+                                    ares_bool_t validate_hostname,
+                                    const char *name);
+ 
+-/*! Check if the queue is empty, if so, wake any waiters.  This is only
+- *  effective if built with threading support.
+- *
+- *  Must be holding a channel lock when calling this function.
+- *
+- *  \param[in]  channel Initialized ares channel object
+- */
+-void          ares_queue_notify_empty(ares_channel_t *channel);
+-
+-
+ #define ARES_SWAP_BYTE(a, b)           \
+   do {                                 \
+     unsigned char swapByte = *(a);     \
+@@ -596,7 +583,7 @@ void          ares__channel_unlock(ares_channel_t *channel);
+ struct ares_event_thread;
+ typedef struct ares_event_thread ares_event_thread_t;
+ 
+-void          ares_event_thread_destroy(ares_channel_t *channel);
++void ares_event_thread_destroy(ares_channel_t *channel);
+ ares_status_t ares_event_thread_init(ares_channel_t *channel);
+ 
+ 
+diff --git a/deps/cares/src/lib/ares_process.c b/deps/cares/src/lib/ares_process.c
+index bd84d09e13..d24add054c 100644
+--- a/deps/cares/src/lib/ares_process.c
++++ b/deps/cares/src/lib/ares_process.c
+@@ -67,11 +67,11 @@ static ares_bool_t   same_questions(const ares_dns_record_t *qrec,
+                                     const ares_dns_record_t *arec);
+ static ares_bool_t   same_address(const struct sockaddr  *sa,
+                                   const struct ares_addr *aa);
+-static void          end_query(ares_channel_t *channel, struct query *query,
+-                               ares_status_t status, const unsigned char *abuf,
+-                               size_t alen);
++static void end_query(const ares_channel_t *channel, struct query *query,
++                      ares_status_t status, const unsigned char *abuf,
++                      size_t alen);
+ 
+-static void          server_increment_failures(struct server_state *server)
++static void server_increment_failures(struct server_state *server)
+ {
+   ares__slist_node_t   *node;
+   const ares_channel_t *channel = server->channel;
+@@ -715,7 +715,6 @@ static ares_status_t process_answer(ares_channel_t      *channel,
+         default:
+           break;
+       }
+-
+       server_increment_failures(server);
+       ares__requeue_query(query, now);
+ 
+@@ -760,8 +759,8 @@ static void handle_conn_error(struct server_connection *conn,
+ 
+ ares_status_t ares__requeue_query(struct query *query, struct timeval *now)
+ {
+-  ares_channel_t *channel = query->channel;
+-  size_t max_tries        = ares__slist_len(channel->servers) * channel->tries;
++  const ares_channel_t *channel = query->channel;
++  size_t max_tries = ares__slist_len(channel->servers) * channel->tries;
+ 
+   query->try_count++;
+ 
+@@ -893,8 +892,8 @@ ares_status_t ares__send_query(struct query *query, struct timeval *now)
+   }
+ 
+   if (server == NULL) {
+-    end_query(channel, query, ARES_ENOSERVER /* ? */, NULL, 0);
+-    return ARES_ENOSERVER;
++    end_query(channel, query, ARES_ESERVFAIL /* ? */, NULL, 0);
++    return ARES_ECONNREFUSED;
+   }
+ 
+   if (query->using_tcp) {
+@@ -1123,23 +1122,18 @@ static void ares_detach_query(struct query *query)
+   query->node_all_queries        = NULL;
+ }
+ 
+-static void end_query(ares_channel_t *channel, struct query *query,
++static void end_query(const ares_channel_t *channel, struct query *query,
+                       ares_status_t status, const unsigned char *abuf,
+                       size_t alen)
+ {
++  (void)channel;
++
+   /* Invoke the callback. */
+   query->callback(query->arg, (int)status, (int)query->timeouts,
+                   /* due to prior design flaws, abuf isn't meant to be modified,
+                    * but bad prototypes, ugh.  Lets cast off constfor compat. */
+                   (unsigned char *)((void *)((size_t)abuf)), (int)alen);
+   ares__free_query(query);
+-
+-  /* Check and notify if no other queries are enqueued on the channel.  This
+-   * must come after the callback and freeing the query for 2 reasons.
+-   *  1) The callback itself may enqueue a new query
+-   *  2) Technically the current query isn't detached until it is free()'d.
+-   */
+-  ares_queue_notify_empty(channel);
+ }
+ 
+ void ares__free_query(struct query *query)
+diff --git a/deps/cares/src/lib/ares_send.c b/deps/cares/src/lib/ares_send.c
+index 6cefdb6a36..2510b1edd3 100644
+--- a/deps/cares/src/lib/ares_send.c
++++ b/deps/cares/src/lib/ares_send.c
+@@ -66,8 +66,8 @@ ares_status_t ares_send_ex(ares_channel_t *channel, const unsigned char *qbuf,
+     return ARES_EBADQUERY;
+   }
+   if (ares__slist_len(channel->servers) == 0) {
+-    callback(arg, ARES_ENOSERVER, 0, NULL, 0);
+-    return ARES_ENOSERVER;
++    callback(arg, ARES_ESERVFAIL, 0, NULL, 0);
++    return ARES_ESERVFAIL;
+   }
+ 
+   /* Check query cache */
+@@ -163,20 +163,3 @@ void ares_send(ares_channel_t *channel, const unsigned char *qbuf, int qlen,
+ 
+   ares__channel_unlock(channel);
+ }
+-
+-size_t ares_queue_active_queries(ares_channel_t *channel)
+-{
+-  size_t len;
+-
+-  if (channel == NULL) {
+-    return 0;
+-  }
+-
+-  ares__channel_lock(channel);
+-
+-  len = ares__llist_len(channel->all_queries);
+-
+-  ares__channel_unlock(channel);
+-
+-  return len;
+-}
+diff --git a/deps/cares/src/lib/ares_strerror.c b/deps/cares/src/lib/ares_strerror.c
+index ae94f9619e..fd583c5cfb 100644
+--- a/deps/cares/src/lib/ares_strerror.c
++++ b/deps/cares/src/lib/ares_strerror.c
+@@ -85,8 +85,6 @@ const char *ares_strerror(int code)
+       return "DNS query cancelled";
+     case ARES_ESERVICE:
+       return "Invalid service name or number";
+-    case ARES_ENOSERVER:
+-      return "No DNS servers were configured";
+   }
+ 
+   return "unknown";
+diff --git a/deps/cares/src/lib/ares_sysconfig.c b/deps/cares/src/lib/ares_sysconfig.c
+index 825008b7b8..6b5408da75 100644
+--- a/deps/cares/src/lib/ares_sysconfig.c
++++ b/deps/cares/src/lib/ares_sysconfig.c
+@@ -624,7 +624,6 @@ static ares_status_t ares__init_sysconfig_windows(ares_sysconfig_t *sysconfig)
+ 
+   if (get_SuffixList_Windows(&line)) {
+     sysconfig->domains = ares__strsplit(line, ", ", &sysconfig->ndomains);
+-    ares_free(line);
+     if (sysconfig->domains == NULL) {
+       status = ARES_EFILE;
+     }
+diff --git a/deps/cares/src/tools/adig.c b/deps/cares/src/tools/adig.c
+index cd427f4b19..52215b3094 100644
+--- a/deps/cares/src/tools/adig.c
++++ b/deps/cares/src/tools/adig.c
+@@ -745,9 +745,9 @@ static void callback(void *arg, int status, int timeouts, unsigned char *abuf,
+ 
+   /* We got a "Server status" */
+   if (status >= ARES_SUCCESS && status <= ARES_EREFUSED) {
+-    printf(";; Got answer:");
++     printf(";; Got answer:");
+   } else {
+-    printf(";;");
++     printf(";;");
+   }
+ 
+   if (status != ARES_SUCCESS) {
+-- 
+2.42.0
+
