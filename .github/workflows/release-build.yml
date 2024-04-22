@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setting up the environment
       run: |
@@ -57,9 +57,8 @@ jobs:
       run: |
         source /opt/rh/devtoolset-11/enable
         cd node-v${{ env.VERSION }}
-        patch -p1 < ../patches/0001-Revert-deps-update-c-ares-to-1.27.0.patch
-        patch -p1 < ../patches/0002-Revert-deps-update-c-ares-to-1.26.0.patch
-        patch -p1 < ../patches/0003-Revert-deps-update-c-ares-to-1.25.0.patch
+        sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
+        sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
         ./configure --prefix=../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
         make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/
         strip ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/bin/node
@@ -74,14 +73,14 @@ jobs:
 
     - name: Upload Artifacts
       if: env.next == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: node-v${{ env.VERSION }}
         path: tar/*
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1.13.0
+      uses: ncipollo/release-action@v1
       with:
         name: node-v${{ env.VERSION }}
         allowUpdates: true
