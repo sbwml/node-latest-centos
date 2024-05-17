@@ -25,7 +25,10 @@ jobs:
         cp repo/devtoolset-12.repo /etc/yum.repos.d
         yum makecache
         yum install -y centos-release-scl-rh centos-release-scl
-        yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget make python3 curl patch
+        yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget make curl patch
+        bash -c "$(curl -sS https://us.cooluc.com/python3/install.sh)"
+        source /etc/profile
+        python3 --version
 
     - name: Check Node Version
       run: |
@@ -55,6 +58,7 @@ jobs:
     - name: Build Node
       if: env.next == 'true'
       run: |
+        source /etc/profile
         source /opt/rh/devtoolset-12/enable
         cd node-v${{ env.VERSION }}
         sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
