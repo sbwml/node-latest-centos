@@ -1,6 +1,7 @@
 name: Build releases
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: 0 23 * * *
 
@@ -24,8 +25,10 @@ jobs:
     - name: Setting up the environment
       run: |
         cp repo/devtoolset-12.repo /etc/yum.repos.d
+        sed -i "s/mirrorlist.centos.org/mirrorlist.cooluc.com/g" /etc/yum.repos.d/CentOS-Base.repo
         yum makecache
         yum install -y centos-release-scl-rh centos-release-scl
+        sed -i "s/mirrorlist.centos.org/mirrorlist.cooluc.com/g" /etc/yum.repos.d/CentOS-SCLo*.repo
         yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget make curl patch
         bash -c "$(curl -sS https://us.cooluc.com/python3/install.sh)"
         source /etc/profile
