@@ -8,41 +8,38 @@ on:
 jobs:
   build:
     name: Build ${{ matrix.tag }} Version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
         tag:
           - lts
           - current
-    container:
-      image: centos:7
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@main
 
-    - name: Setting up the environment
+    - name: Init centos rootfs
       run: |
-        cp repo/devtoolset-12.repo /etc/yum.repos.d
-        sed -i "s/mirrorlist.centos.org/mirrorlist.cooluc.com/g" /etc/yum.repos.d/CentOS-Base.repo
-        yum makecache
-        yum install -y centos-release-scl-rh centos-release-scl
-        sed -i "s/mirrorlist.centos.org/mirrorlist.cooluc.com/g" /etc/yum.repos.d/CentOS-SCLo*.repo
-        yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget make curl patch
-        bash -c "$(curl -sS https://us.cooluc.com/python3/install.sh)"
-        source /etc/profile
-        python3 --version
+        wget -q https://github.com/sbwml/kernel-latest-centos/releases/download/rootfs/rootfs.tar.xz
+        tar xf rootfs.tar.xz && rm -f rootfs.tar.xz
+        echo "rootfs=$(pwd)/rootfs" >> "$GITHUB_ENV"
+        sudo mount -o bind /dev rootfs/dev
+        sudo mount -t proc /proc rootfs/proc
+        sudo mount -t sysfs /sys rootfs/sys
 
     - name: Check Node Version
       run: |
-        # the original commit does not seem to be readable inside the container, so use github api.
         TAGS=$(curl -sk https://api.github.com/repos/sbwml/node-latest-centos/tags | grep "name")
         if [[ ${{ matrix.tag }} == "lts" ]]; then
-            LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*LTS' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
+            LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*LTS' | sed '/body/d' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
             echo "PRE_RELEASE=false" >> "$GITHUB_ENV"
         else
-            LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*Current' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
+            LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*Current'| sed '/body/d' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
             echo "PRE_RELEASE=true" >> "$GITHUB_ENV"
         fi
         if [[ "$TAGS" == *"$LATEST_VERSION"* ]]; then
@@ -53,42 +50,26 @@ jobs:
             echo "next=true" >> "$GITHUB_ENV"
         fi
 
-    - name: Download Node source code
+    - name: Build Node.js
       if: env.next == 'true'
       run: |
-        wget https://nodejs.org/dist/v${{ env.VERSION }}/node-v${{ env.VERSION }}.tar.xz
-        tar -Jxf node-v${{ env.VERSION }}.tar.xz
-
-    - name: Build Node
-      if: env.next == 'true'
-      run: |
-        source /etc/profile
-        source /opt/rh/devtoolset-12/enable
-        cd node-v${{ env.VERSION }}
-        sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
-        sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
-        ./configure --prefix=../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
-        make -j$(($(nproc --all)+1)) && make install && cp -a ./{LICENSE,CHANGELOG.md,README.md} ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/
-        strip ../node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)/bin/node
-
-    - name: Create Archive
-      if: env.next == 'true'
-      run: |
-        mkdir tar
-        tar Jcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.xz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
-        tar zcvf tar/node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT).tar.gz node-v${{ env.VERSION }}-linux-x$(getconf LONG_BIT)
-        cd tar && sha256sum node-v* > sha256sum.txt
+        sudo cp -a build.sh ${{ env.rootfs }}
+        sudo cp -a repo/devtoolset-12.repo ${{ env.rootfs }}/etc/yum.repos.d
+        sudo chroot ${{ env.rootfs }} /bin/bash /build.sh ${{ env.VERSION }}
+        mkdir out
+        sudo cp -a ${{ env.rootfs }}/node-v*.tar.* out
+        sudo cp -a ${{ env.rootfs }}/sha256sum.txt out
 
     - name: Upload Artifacts
       if: env.next == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: node-v${{ env.VERSION }}
-        path: tar/*
+        path: out/*
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1.13.0
+      uses: ncipollo/release-action@v1.14.0
       with:
         name: node-v${{ env.VERSION }}
         allowUpdates: true
@@ -97,4 +78,4 @@ jobs:
         replacesArtifacts: true
         prerelease: ${{ env.PRE_RELEASE }}
         token: ${{ secrets.workflow_token }}
-        artifacts: tar/*
+        artifacts: out/*
