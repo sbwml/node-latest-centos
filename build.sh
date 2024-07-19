@@ -13,6 +13,7 @@ echo "::endgroup::"
 echo "::group::  Download node-v"$node_version".tar.xz"
 wget https://nodejs.org/dist/v"$node_version"/node-v"$node_version".tar.xz
 tar -Jxf node-v"$node_version".tar.xz
+rm -rf node-v"$node_version".tar.xz
 echo "::endgroup::"
 
 # Build Node
@@ -35,6 +36,6 @@ strip ../node-v"$node_version"-linux-x$(getconf LONG_BIT)/bin/node
 
 # Create Archive
 cd ..
-tar Jcvf tar/node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.xz node-v"$node_version"-linux-x$(getconf LONG_BIT)
-tar zcvf tar/node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.gz node-v"$node_version"-linux-x$(getconf LONG_BIT)
+tar Jcvf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.xz node-v"$node_version"-linux-x$(getconf LONG_BIT)
+tar zcvf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.gz node-v"$node_version"-linux-x$(getconf LONG_BIT)
 sha256sum node-v*.tar.* > sha256sum.txt
