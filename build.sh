@@ -7,6 +7,11 @@ echo "::group::  Setting up the environment"
 yum makecache
 yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget curl patch openssl-devel
 bash -c "$(curl -sS https://us.cooluc.com/python3/install.sh)"
+wget https://github.com/sbwml/redhat-llvm-project/releases/download/20.0.0/clang-20.0.0-x86_64-redhat-linux-gnu.tar.xz
+tar xf clang-20.0.0-x86_64-redhat-linux-gnu.tar.xz
+mv clang-20.0.0-x86_64-redhat-linux-gnu /opt/clang
+rm -rf clang-20.0.0-x86_64-redhat-linux-gnu.tar.xz
+echo "export PATH=\"/opt/clang/bin:\$PATH\"" >> /etc/profile
 echo "::endgroup::"
 
 # Download Source
@@ -23,7 +28,7 @@ cd node-v"$node_version"
 sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
 sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
 echo "::group::  Configure node-v"$node_version""
-./configure --prefix=../node-v"$node_version"-linux-x$(getconf LONG_BIT)
+CC=clang CXX=clang++ ./configure --prefix=../node-v"$node_version"-linux-x$(getconf LONG_BIT)
 echo "::endgroup::"
 echo "::group::  make node-v"$node_version""
 make -j$(($(nproc --all)+1))
@@ -36,6 +41,6 @@ strip ../node-v"$node_version"-linux-x$(getconf LONG_BIT)/bin/node
 
 # Create Archive
 cd ..
-tar Jcvf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.xz node-v"$node_version"-linux-x$(getconf LONG_BIT)
-tar zcvf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.gz node-v"$node_version"-linux-x$(getconf LONG_BIT)
+tar Jcf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.xz node-v"$node_version"-linux-x$(getconf LONG_BIT)
+tar zcf node-v"$node_version"-linux-x$(getconf LONG_BIT).tar.gz node-v"$node_version"-linux-x$(getconf LONG_BIT)
 sha256sum node-v*.tar.* > sha256sum.txt
