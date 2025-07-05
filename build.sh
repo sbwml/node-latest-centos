@@ -1,6 +1,7 @@
 #!/bin/bash
 
 node_version="$1"
+major_version=${node_version%%.*}
 
 # Setting up the environment
 echo "::group::  Setting up the environment"
@@ -25,8 +26,48 @@ echo "::endgroup::"
 source /etc/profile
 source /opt/rh/devtoolset-12/enable
 cd node-v"$node_version"
+
+# fix cares
 sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
 sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
+
+if [ "$major_version" -ge "23" ]; then
+    # v8: wasm: fix: define MFD_CLOEXEC for compatibility with old glibc
+    cat <<'EOF' | cat - deps/v8/src/wasm/wasm-objects.cc > temp && mv temp deps/v8/src/wasm/wasm-objects.cc -f
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <fcntl.h>
+
+#ifndef MFD_CLOEXEC
+#define MFD_CLOEXEC 0x0001
+#endif
+
+#ifndef MFD_ALLOW_SEALING
+#define MFD_ALLOW_SEALING 0x0002
+#endif
+
+#ifndef HAVE_MEMFD_CREATE
+#if defined(__x86_64__)
+#define __NR_memfd_create 319
+#elif defined(__i386__)
+#define __NR_memfd_create 356
+#elif defined(__arm__)
+#define __NR_memfd_create 385
+#elif defined(__aarch64__)
+#define __NR_memfd_create 279
+#else
+#error "Platform not supported for memfd_create syscall numbers"
+#endif
+
+static inline int memfd_create(const char *name, unsigned int flags) {
+    return syscall(__NR_memfd_create, name, flags);
+}
+#endif
+
+EOF
+fi
+
 echo "::group::  Configure node-v"$node_version""
 CC=clang CXX=clang++ ./configure --prefix=../node-v"$node_version"-linux-x$(getconf LONG_BIT)
 echo "::endgroup::"
