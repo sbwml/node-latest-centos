@@ -37,8 +37,10 @@ jobs:
         TAGS=$(curl -sk https://api.github.com/repos/sbwml/node-latest-centos/tags | grep "name")
         if [[ ${{ matrix.tag }} == "lts" ]]; then
             LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*LTS' | sed '/body/d' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
+            echo "release_latest=true" >> "$GITHUB_ENV"
         else
             LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*Current'| sed '/body/d' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
+            echo "release_latest=false" >> "$GITHUB_ENV"
         fi
         if [[ "$TAGS" == *"$LATEST_VERSION"* ]]; then
             echo -e " \n\e[1;32mnode-v$LATEST_VERSION is already the latest version.\e[0m\n"
@@ -67,10 +69,11 @@ jobs:
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1.14.0
+      uses: ncipollo/release-action@v1.18.0
       with:
         name: node-v${{ env.VERSION }}-${{ matrix.tag }}
         allowUpdates: true
+        makeLatest: ${{ env.release_latest }}
         tag: v${{ env.VERSION }}
         commit: master
         replacesArtifacts: true
