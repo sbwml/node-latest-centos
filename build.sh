@@ -69,6 +69,7 @@ EOF
 fi
 
 echo "::group::  Configure node-v"$node_version""
+export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
 CC=clang CXX=clang++ ./configure --prefix=../node-v"$node_version"-linux-x$(getconf LONG_BIT)
 echo "::endgroup::"
 echo "::group::  make node-v"$node_version""
