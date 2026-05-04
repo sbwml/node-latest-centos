@@ -62,14 +62,14 @@ jobs:
 
     - name: Upload Artifacts
       if: env.next == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@main
       with:
         name: node-v${{ env.VERSION }}
         path: out/*
 
     - name: Create release
       if: env.next == 'true'
-      uses: ncipollo/release-action@v1.18.0
+      uses: ncipollo/release-action@main
       with:
         name: node-v${{ env.VERSION }}-${{ matrix.tag }}
         allowUpdates: true
