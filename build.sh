@@ -9,10 +9,10 @@ echo "::group::  Setting up the environment"
 yum makecache
 yum install -y devtoolset-12-gcc devtoolset-12-gcc-c++ devtoolset-12-make wget curl patch openssl-devel
 bash -c "$(curl -sS https://us.cooluc.com/python3/install.sh)"
-wget https://github.com/sbwml/redhat-llvm-project/releases/download/22.0.2/clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
-tar xf clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
-mv clang-22.0.2-x86_64-redhat-linux-gnu /opt/clang
-rm -rf clang-22.0.2-x86_64-redhat-linux-gnu.tar.xz
+wget -q https://github.com/sbwml/redhat-llvm-project/releases/download/23.0.1/clang-23.0.1-x86_64-redhat-linux-gnu.tar.xz
+tar xf clang-23.0.1-x86_64-redhat-linux-gnu.tar.xz
+mv clang-23.0.1-x86_64-redhat-linux-gnu /opt/clang
+rm -rf clang-23.0.1-x86_64-redhat-linux-gnu.tar.xz
 echo "export PATH=\"/opt/clang/bin:\$PATH\"" >> /etc/profile
 echo "::endgroup::"
 
