@@ -34,7 +34,7 @@ jobs:
 
     - name: Check Node Version
       run: |
-        TAGS=$(curl -sk https://api.github.com/repos/sbwml/node-latest-centos/tags | grep "name")
+        TAGS=$(curl -sk "https://api.github.com/repos/sbwml/node-latest-centos/tags?per_page=100" | grep "name")
         if [[ ${{ matrix.tag }} == "lts" ]]; then
             LATEST_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases" | grep 'Version.*LTS' | sed '/body/d' | head -1 | grep -oP "(?<=Version )\d+\.\d+\.\d+")
             echo "release_latest=true" >> "$GITHUB_ENV"
