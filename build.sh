@@ -2,6 +2,7 @@
 
 node_version="$1"
 major_version=${node_version%%.*}
+minor_version=$(printf '%s' "${node_version#*.}" | cut -d. -f1)
 
 # Setting up the environment
 echo "::group::  Setting up the environment"
@@ -30,6 +31,43 @@ cd node-v"$node_version"
 # fix cares
 sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
 sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
+
+if [ "$major_version" -ge "26" ]; then
+    patch -p1 -N <<'EOF'
+--- a/deps/LIEF/include/LIEF/runtime/osx/Host.hpp
++++ b/deps/LIEF/include/LIEF/runtime/osx/Host.hpp
+@@ -20,6 +20,13 @@
+ #include <string>
+ #include <ostream>
+ 
++#ifdef major
++#  undef major
++#endif
++#ifdef minor
++#  undef minor
++#endif
++
+ namespace LIEF {
+ namespace runtime {
+ namespace osx {
+--- a/deps/LIEF/include/LIEF/runtime/windows/Host.hpp
++++ b/deps/LIEF/include/LIEF/runtime/windows/Host.hpp
+@@ -20,6 +20,13 @@
+ #include <string>
+ #include <ostream>
+ 
++#ifdef major
++#  undef major
++#endif
++#ifdef minor
++#  undef minor
++#endif
++
+ namespace LIEF {
+ namespace runtime {
+ namespace windows {
+EOF
+fi
 
 if [ "$major_version" -ge "23" ]; then
     # v8: wasm: fix: define MFD_CLOEXEC for compatibility with old glibc
