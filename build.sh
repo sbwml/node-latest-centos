@@ -32,6 +32,12 @@ cd node-v"$node_version"
 sed -i 's/define HAVE_SYS_RANDOM_H 1/undef HAVE_SYS_RANDOM_H/g' deps/cares/config/linux/ares_config.h
 sed -i 's/define HAVE_GETRANDOM 1/undef HAVE_GETRANDOM/g' deps/cares/config/linux/ares_config.h
 
+# fix simdjson duplicate symbol: append_uint / append_byte
+if [ -d "deps/simdjson" ]; then
+    find deps/simdjson -type f \( -name "*.h" -o -name "*.cpp" \) -exec sed -i \
+      's/void append_uint(std::string/inline void append_uint(std::string/g; s/void append_byte(std::string/inline void append_byte(std::string/g' {} +
+fi
+
 if [ "$major_version" -ge "26" ]; then
     patch -p1 -N <<'EOF'
 --- a/deps/LIEF/include/LIEF/runtime/osx/Host.hpp
@@ -108,6 +114,8 @@ fi
 
 echo "::group::  Configure node-v"$node_version""
 export CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=1"
+export LDFLAGS="-Wl,--allow-multiple-definition"
+
 CC=clang CXX=clang++ ./configure --prefix=../node-v"$node_version"-linux-x$(getconf LONG_BIT)
 echo "::endgroup::"
 echo "::group::  make node-v"$node_version""
